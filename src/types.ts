@@ -1,7 +1,9 @@
-import type { ListToolsResult, ServerResult } from "@modelcontextprotocol/sdk/types.js";
-import type { z } from "zod";
+import type { ListToolsResult, ServerResult } from '@modelcontextprotocol/sdk/types.js';
+import type { z } from 'zod';
 
-export type ToolConfig = Omit<ListToolsResult['tools'][number], 'inputSchema'> & {
-  func: (args: unknown) => Promise<ServerResult>,
-  zodSchema: z.ZodSchema<unknown>;
-}
+export type ToolConfig = {
+  name: string;
+  description: string;
+  zodSchema?: z.ZodSchema<unknown>;
+  func: (args: unknown) => Promise<ServerResult>;
+};

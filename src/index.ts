@@ -1,39 +1,52 @@
 #!/usr/bin/env node
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-import { getTools } from "./tools";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import zodToJsonSchema from 'zod-to-json-schema';
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { tools } from './tools';
+import { handleErrorResult } from './utils';
+import { z } from 'zod';
 
-const mcpServer = new McpServer({
-  name: 'Trends Hub',
-  version: process.env.PACKAGE_VERSION ?? '0.0.0',
-}, {
-  capabilities: {
-    tools: {},
-  }
-})
+const mcpServer = new McpServer(
+  {
+    name: 'Trends Hub',
+    version: process.env.PACKAGE_VERSION ?? '0.0.0',
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
+  },
+);
 
 mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
-  const tools = await getTools()
   return {
-    tools: tools.map((item) => ({
-      name: item.config.name,
-      description: item.config.description,
-      inputSchema: zodToJsonSchema(item.config.zodSchema),
-    }))
-  }
-})
+    tools: (await tools).map((item) => {
+      const { name, description, zodSchema = z.object({}) } = item.default;
+      return {
+        name,
+        description,
+        inputSchema: zodToJsonSchema(zodSchema),
+      };
+    }),
+  };
+});
 
 mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const tools = await getTools()
-  const tool = tools.find((item) => item.config.name === request.params.name)
-  return tool?.config.func(request.params.args) ?? {}
+  try {
+    const tool = (await tools).find((item) => item.default.name === request.params.name)?.default;
+    if (!tool) {
+      throw new Error('Tool not found');
+    }
+    const result = await tool.func(request.params.args ?? {});
+    return result;
+  } catch (error) {
+    return handleErrorResult(error);
+  }
 });
 
 (async () => {
   const transport = new StdioServerTransport();
   await mcpServer.connect(transport);
 })();
-

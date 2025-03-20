@@ -1,39 +1,38 @@
 {
   "name": "mcp-trends-hub",
   "version": "1.0.0",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": "./dist/index.js",
+  "description": "MCP Trends Hub",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
-    "dev": "rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
     "format": "biome format --write",
-    "inspector": "mcp-inspector"
+    "inspector": "mcp-inspector",
+    "prerelease": "npm run build",
+    "release": "changeset publish"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "axios": "^1.8.4",
+    "cheerio": "^1.0.0",
+    "dayjs": "^1.11.13",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.4",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.28.1",
     "@modelcontextprotocol/inspector": "^0.6.0",
     "@rslib/core": "^0.5.4",
     "@types/node": "^22.8.1",
     "typescript": "^5.8.2"
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "axios": "^1.8.4",
-    "zod": "^3.24.2",
-    "zod-to-json-schema": "^3.24.4",
-    "zod-validation-error": "^3.4.0"
-  }
+  "packageManager": "pnpm@9.12.1"
 }

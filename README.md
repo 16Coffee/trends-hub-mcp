@@ -1,23 +1,33 @@
-# Rslib project
+# Trends Hub
 
-## Setup
+热点趋势聚合 Model Context Protocol (MCP) 服务
 
-Install the dependencies:
+## 使用方法
 
-```bash
-pnpm install
+```jsonc
+{
+  "mcpServers": {
+    "trends-hub": {
+      "command": "npx",
+      "args": ["-y", "mcp-trends-hub@latest"]
+    }
+  }
+}
 ```
 
-## Get started
+## 工具列表
 
-Build the library:
+| 工具名称              | 描述               |
+| --------------------- | ------------------ |
+| get-bilibili-rank     | 获取哔哩哔哩排行榜 |
+| get-douban-new-movies | 获取豆瓣电影新片榜 |
+| get-douyin-trending   | 获取抖音热榜       |
+| get-toutiao-trending  | 获取今日头条热榜   |
+| get-weibo-trending    | 获取微博热搜榜     |
+| get-zhihu-trending    | 获取知乎热榜       |
 
-```bash
-pnpm build
-```
+更多工具正在开发中，欢迎提交 PR 或 Issue。
 
-Build the library in watch mode:
+## 鸣谢
 
-```bash
-pnpm dev
-```
+- [DailyHotApi](https://github.com/imsyy/DailyHotApi)

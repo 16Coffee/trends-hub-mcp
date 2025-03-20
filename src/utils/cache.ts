@@ -6,7 +6,7 @@ class CacheStorage {
   private get cachePath() {
     const cachePath = path.join(
       os.tmpdir(),
-      '.mcp-trends-hub',
+      'mcp-trends-hub',
       'cache'
     )
     if (!fs.existsSync(cachePath)) {

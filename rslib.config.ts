@@ -4,11 +4,6 @@ import { version } from "./package.json";
 export default defineConfig({
   lib: [
     {
-      format: 'esm',
-      syntax: 'es2021',
-      dts: true,
-    },
-    {
       format: 'cjs',
       syntax: 'es2021',
     },
@@ -16,6 +11,7 @@ export default defineConfig({
   source: {
     define: {
       'process.env.PACKAGE_VERSION': JSON.stringify(version),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }
-  }
+  },
 });

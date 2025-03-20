@@ -1,9 +1,14 @@
-import type { ServerResult } from "@modelcontextprotocol/sdk/types.js";
-import { ZodError } from "zod";
+import type { ServerResult } from '@modelcontextprotocol/sdk/types.js';
+import { ZodError } from 'zod';
 import { fromError } from 'zod-validation-error';
+import type { ToolConfig } from '../types';
 
-export { cacheStorage } from './cache'
-export { http } from './http'
+export { cacheStorage } from './cache';
+export { http } from './http';
+export { logger } from './logger';
+export { dayjs } from './dayjs';
+
+export const defineToolConfig = (config: ToolConfig): ToolConfig => config;
 
 export const handleErrorResult = (error: unknown): ServerResult => {
   let errorMessage = '';
@@ -15,13 +20,15 @@ export const handleErrorResult = (error: unknown): ServerResult => {
     errorMessage = JSON.stringify(error);
   }
   return {
-    content: [{
-      type: 'text',
-      text: errorMessage,
-    }],
+    content: [
+      {
+        type: 'text',
+        text: errorMessage,
+      },
+    ],
     isError: true,
   };
-}
+};
 
 export const handleSuccessResult = (...result: unknown[]): ServerResult => {
   return {
@@ -30,4 +37,4 @@ export const handleSuccessResult = (...result: unknown[]): ServerResult => {
       text: JSON.stringify(item),
     })),
   };
-}
+};
