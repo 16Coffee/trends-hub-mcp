@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.2.1
+
+### Patch Changes
+
+- 802935e: 修复参数名称错误，将`args`改为`arguments`
+
 ## 1.2.0
 
 ### Minor Changes
