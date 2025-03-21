@@ -1,6 +1,6 @@
 export const tools = Promise.all([
   import('./bilibili'),
-  import('./douban-movie'),
+  import('./douban'),
   import('./douyin'),
   import('./toutiao'),
   import('./weibo'),
