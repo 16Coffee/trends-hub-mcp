@@ -19,6 +19,7 @@
 
 | 工具名称             | 描述               |
 | -------------------- | ------------------ |
+| get-36kr-trending    | 获取 36 氪热榜     |
 | get-bilibili-rank    | 获取哔哩哔哩排行榜 |
 | get-douban-rank      | 获取豆瓣实时热门榜 |
 | get-douyin-trending  | 获取抖音热榜       |
