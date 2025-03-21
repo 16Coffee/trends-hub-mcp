@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.2.0
+
+### Minor Changes
+
+- 3ef95c4: 新增 36kr 工具
+
 ## 1.1.0
 
 ### Minor Changes
