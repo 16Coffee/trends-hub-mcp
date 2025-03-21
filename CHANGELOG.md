@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.3.1
+
+### Patch Changes
+
+- b4f5dac: 优化头条链接，节省 token
+
 ## 1.3.0
 
 ### Minor Changes
