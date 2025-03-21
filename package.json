@@ -4,7 +4,20 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": "./dist/index.js",
-  "description": "MCP Trends Hub",
+  "description": "🔥 基于 Model Context Protocol (MCP) 协议的全网热点趋势一站式聚合服务",
+  "keywords": [
+    "mcp",
+    "trends"
+  ],
+  "author": "baranwang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baranwang/mcp-trends-hub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/baranwang/mcp-trends-hub/issues"
+  },
   "files": [
     "dist"
   ],

@@ -1,6 +1,9 @@
-# Trends Hub
+# 🔥 Trends Hub
 
-热点趋势聚合 Model Context Protocol (MCP) 服务
+[![NPM Version](https://img.shields.io/npm/v/mcp-trends-hub)](https://www.npmjs.com/package/mcp-trends-hub)
+![NPM License](https://img.shields.io/npm/l/mcp-trends-hub)
+
+基于 Model Context Protocol (MCP) 协议的全网热点趋势一站式聚合服务
 
 ## 使用方法
 
