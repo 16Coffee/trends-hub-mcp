@@ -130,7 +130,7 @@ const mainGetBilibiliRank = async (type: number) => {
     description: item.desc || '该视频暂无简介',
     cover: item.pic,
     author: item.owner?.name,
-    publishTime: dayjs.unix(item.pubdate).format('YYYY-MM-DD HH:mm:ss'),
+    publishTime: dayjs.unix(item.pubdate).toISOString(),
     view: item.stat?.view || 0,
     link: item.short_link_v2 || `https://www.bilibili.com/video/${item.bvid}`,
   }));

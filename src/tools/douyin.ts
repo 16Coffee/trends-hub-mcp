@@ -44,7 +44,7 @@ export default defineToolConfig({
       ...resp.data.data.word_list.map((item) => {
         return {
           title: item.word,
-          eventTime: dayjs.unix(item.event_time).format('YYYY-MM-DD HH:mm:ss'),
+          eventTime: dayjs.unix(item.event_time).toISOString(),
           cover: item.word_cover?.url_list?.[0],
           popularity: item.hot_value,
           link: `https://www.douyin.com/hot/${item.sentence_id}`,

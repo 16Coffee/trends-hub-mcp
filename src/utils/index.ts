@@ -37,11 +37,27 @@ export const handleErrorResult = (error: unknown): ServerResult => {
   };
 };
 
-export const handleSuccessResult = (...result: unknown[]): ServerResult => {
+export const handleSuccessResult = (...result: Record<string, string | number | undefined | null>[]): ServerResult => {
   return {
-    content: result.map((item) => ({
-      type: 'text',
-      text: JSON.stringify(item),
-    })),
+    content: result.map((item) => {
+      let text = '';
+      for (const [key, value] of Object.entries(item)) {
+        if (value !== undefined && value !== null && value !== '') {
+          text += `<${key}>${value}</${key}>\n`;
+        }
+      }
+      return {
+        type: 'text',
+        text,
+      };
+    }),
   };
+};
+
+export const safeJsonParse = <T>(json: string): T | undefined => {
+  try {
+    return JSON.parse(json) as T;
+  } catch {
+    return undefined;
+  }
 };

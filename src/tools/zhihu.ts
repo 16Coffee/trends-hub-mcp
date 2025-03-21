@@ -27,7 +27,7 @@ export default defineToolConfig({
           title: data.title,
           description: data.excerpt,
           cover: item.children[0].thumbnail,
-          created: dayjs.unix(data.created).format('YYYY-MM-DD HH:mm:ss'),
+          created: dayjs.unix(data.created).toISOString(),
           popularity: item.detail_text,
           link: `https://www.zhihu.com/question/${data.id}`,
         };

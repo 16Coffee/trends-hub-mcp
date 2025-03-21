@@ -53,7 +53,7 @@ export default defineToolConfig({
           title: data.widgetTitle,
           cover: data.widgetImage,
           author: data.authorName,
-          publish_time: dayjs(data.publishTime).format('YYYY-MM-DD HH:mm:ss'),
+          publish_time: dayjs(data.publishTime).toISOString(),
           read_count: data.statRead,
           collect_count: data.statCollect,
           comment_count: data.statComment,

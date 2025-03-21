@@ -3,10 +3,28 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import zodToJsonSchema from 'zod-to-json-schema';
-import { tools } from './tools';
-import { handleErrorResult } from './utils';
 import { z } from 'zod';
+import zodToJsonSchema from 'zod-to-json-schema';
+import type { ToolConfig } from './types';
+import { handleErrorResult, logger } from './utils';
+
+async function loadToolConfigurations(toolsContext: Rspack.Context) {
+  const toolPromises = toolsContext.keys().map((key) => {
+    const toolModule = toolsContext(key) as { default: Promise<ToolConfig> };
+    return toolModule.default.catch((error) => {
+      logger.error(`Failed to load tool from ${key}`);
+      return null;
+    });
+  });
+
+  const validTools = (await Promise.all(toolPromises)).filter((tool): tool is ToolConfig => !!tool);
+  const toolConfigMap = new Map(validTools.map((tool) => [tool.name, tool]));
+
+  return {
+    toolConfigMap,
+    validTools,
+  };
+}
 
 const mcpServer = new McpServer(
   {
@@ -21,39 +39,48 @@ const mcpServer = new McpServer(
 );
 
 (async () => {
-  const toolConfigs = new Map(
-    (await Promise.all((await tools).map((item) => item.default.catch(() => null))))
-      .filter((item) => !!item)
-      .map((item) => [item.name, item]),
-  );
+  try {
+    // Load files both with and without extensions from the tools directory
+    const toolsContext = import.meta.webpackContext('./tools', {
+      regExp: /\.(js|ts)$/,
+    });
+    const { toolConfigMap, validTools } = await loadToolConfigurations(toolsContext);
 
-  const toolList = Array.from(toolConfigs.values());
+    // 处理工具列表请求
+    mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
+      return {
+        tools: validTools.map((tool) => {
+          const { name, description, zodSchema = z.object({}) } = tool;
+          return {
+            name,
+            description,
+            inputSchema: zodToJsonSchema(zodSchema),
+          };
+        }),
+      };
+    });
 
-  mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return {
-      tools: toolList.map((item) => {
-        const { name, description, zodSchema = z.object({}) } = item;
-        return {
-          name,
-          description,
-          inputSchema: zodToJsonSchema(zodSchema),
-        };
-      }),
-    };
-  });
-
-  mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    try {
-      const tool = toolConfigs.get(request.params.name);
-      if (!tool) {
-        throw new Error('Tool not found');
+    // 处理工具调用请求
+    mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+      try {
+        const tool = toolConfigMap.get(request.params.name);
+        if (!tool) {
+          throw new Error(`Tool not found: ${request.params.name}`);
+        }
+        const result = await tool.func(request.params.arguments ?? {});
+        return result;
+      } catch (error) {
+        return handleErrorResult(error);
       }
-      const result = await tool.func(request.params.arguments ?? {});
-      return result;
-    } catch (error) {
-      return handleErrorResult(error);
-    }
-  });
-  const transport = new StdioServerTransport();
-  await mcpServer.connect(transport);
+    });
+
+    // 连接传输层
+    const transport = new StdioServerTransport();
+    await mcpServer.connect(transport);
+    logger.info('MCP Trends Hub server started successfully');
+  } catch (error) {
+    logger.error('Failed to start MCP server');
+    logger.error(error);
+    process.exit(1);
+  }
 })();
