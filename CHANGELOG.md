@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.3.0
+
+### Minor Changes
+
+- 79ba5ed: 添加多个工具以获取热门新闻和排行榜
+
 ## 1.2.1
 
 ### Patch Changes
