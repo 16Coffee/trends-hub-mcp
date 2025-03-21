@@ -16,11 +16,13 @@ export default defineToolConfig({
     }
     return handleSuccessResult(
       ...resp.data.data.map((item) => {
+        const link = new URL(item.Url);
+        link.search = '';
         return {
           title: item.Title,
           cover: item.Image.url,
           popularity: item.HotValue,
-          link: item.Url,
+          link: link.toString(),
         };
       }),
     );

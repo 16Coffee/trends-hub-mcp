@@ -35,6 +35,10 @@
 
 更多工具正在开发中，欢迎提交 PR 或 Issue。
 
+## 示例
+
+![toutiao](./assets/toutiao.png)
+
 ## 鸣谢
 
 - [DailyHotApi](https://github.com/imsyy/DailyHotApi) - 部分工具的实现参考
