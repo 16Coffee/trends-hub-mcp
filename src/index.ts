@@ -48,7 +48,7 @@ const mcpServer = new McpServer(
       if (!tool) {
         throw new Error('Tool not found');
       }
-      const result = await tool.func(request.params.args ?? {});
+      const result = await tool.func(request.params.arguments ?? {});
       return result;
     } catch (error) {
       return handleErrorResult(error);
