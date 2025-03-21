@@ -1,4 +1,5 @@
 export const tools = Promise.all([
+  import('./36kr'),
   import('./bilibili'),
   import('./douban'),
   import('./douyin'),

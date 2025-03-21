@@ -20,7 +20,7 @@ export default defineToolConfig({
           title: item.Title,
           cover: item.Image.url,
           popularity: item.HotValue,
-          url: item.Url,
+          link: item.Url,
         };
       }),
     );

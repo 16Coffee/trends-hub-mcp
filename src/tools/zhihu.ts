@@ -29,7 +29,7 @@ export default defineToolConfig({
           cover: item.children[0].thumbnail,
           created: dayjs.unix(data.created).format('YYYY-MM-DD HH:mm:ss'),
           popularity: item.detail_text,
-          url: `https://www.zhihu.com/question/${data.id}`,
+          link: `https://www.zhihu.com/question/${data.id}`,
         };
       }),
     );

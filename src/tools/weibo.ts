@@ -27,7 +27,7 @@ export default defineToolConfig({
             title: item.word,
             description: item.note || key,
             popularity: item.num,
-            url: url.toString(),
+            link: url.toString(),
           };
         }),
     );

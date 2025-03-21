@@ -51,7 +51,7 @@ export default defineToolConfig({
           cover: item.cover.url,
           year: item.year,
           release_date: item.release_date,
-          url: item.url,
+          link: item.url,
           popularity: item.score,
           rating_count: item.rating.count,
           rating_value: item.rating.count > 0 ? item.rating.value : undefined,

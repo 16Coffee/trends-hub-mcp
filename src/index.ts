@@ -20,33 +20,40 @@ const mcpServer = new McpServer(
   },
 );
 
-mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: (await tools).map((item) => {
-      const { name, description, zodSchema = z.object({}) } = item.default;
-      return {
-        name,
-        description,
-        inputSchema: zodToJsonSchema(zodSchema),
-      };
-    }),
-  };
-});
-
-mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  try {
-    const tool = (await tools).find((item) => item.default.name === request.params.name)?.default;
-    if (!tool) {
-      throw new Error('Tool not found');
-    }
-    const result = await tool.func(request.params.args ?? {});
-    return result;
-  } catch (error) {
-    return handleErrorResult(error);
-  }
-});
-
 (async () => {
+  const toolConfigs = new Map(
+    (await Promise.all((await tools).map((item) => item.default.catch(() => null))))
+      .filter((item) => !!item)
+      .map((item) => [item.name, item]),
+  );
+
+  const toolList = Array.from(toolConfigs.values());
+
+  mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
+    return {
+      tools: toolList.map((item) => {
+        const { name, description, zodSchema = z.object({}) } = item;
+        return {
+          name,
+          description,
+          inputSchema: zodToJsonSchema(zodSchema),
+        };
+      }),
+    };
+  });
+
+  mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    try {
+      const tool = toolConfigs.get(request.params.name);
+      if (!tool) {
+        throw new Error('Tool not found');
+      }
+      const result = await tool.func(request.params.args ?? {});
+      return result;
+    } catch (error) {
+      return handleErrorResult(error);
+    }
+  });
   const transport = new StdioServerTransport();
   await mcpServer.connect(transport);
 })();

@@ -8,7 +8,14 @@ export { http } from './http';
 export { logger } from './logger';
 export { dayjs } from './dayjs';
 
-export const defineToolConfig = (config: ToolConfig): ToolConfig => config;
+export const defineToolConfig = async (
+  config: ToolConfig | (() => ToolConfig | Promise<ToolConfig>),
+): Promise<ToolConfig> => {
+  if (typeof config === 'function') {
+    return await config();
+  }
+  return config;
+};
 
 export const handleErrorResult = (error: unknown): ServerResult => {
   let errorMessage = '';

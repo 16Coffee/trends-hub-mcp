@@ -47,7 +47,7 @@ export default defineToolConfig({
           eventTime: dayjs.unix(item.event_time).format('YYYY-MM-DD HH:mm:ss'),
           cover: item.word_cover?.url_list?.[0],
           popularity: item.hot_value,
-          url: `https://www.douyin.com/hot/${item.sentence_id}`,
+          link: `https://www.douyin.com/hot/${item.sentence_id}`,
         };
       }),
     );

@@ -24,17 +24,8 @@ const bilibiliRequestSchema = z.object({
     .describe('排行榜分区'),
 });
 
-const mixinKeyEncTab = [
-  46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49, 33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41,
-  13, 37, 48, 7, 16, 24, 55, 40, 61, 26, 17, 0, 1, 60, 51, 30, 4, 22, 25, 54, 21, 56, 59, 6, 63, 57, 62, 11, 36, 20, 34,
-  44, 52,
-];
-
-const getMixinKey = (orig: string): string =>
-  mixinKeyEncTab
-    .map((n) => orig[n])
-    .join('')
-    .slice(0, 32);
+const UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
 
 const encodeWbi = (params: Record<string, string>, imgKey: string, subKey: string): string => {
   // 过滤特殊字符
@@ -56,9 +47,18 @@ const encodeWbi = (params: Record<string, string>, imgKey: string, subKey: strin
     search.set(key, value);
   }
 
+  const mixinKey = [
+    46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49, 33, 9, 42, 19, 29, 28, 14, 39, 12, 38,
+    41, 13, 37, 48, 7, 16, 24, 55, 40, 61, 26, 17, 0, 1, 60, 51, 30, 4, 22, 25, 54, 21, 56, 59, 6, 63, 57, 62, 11, 36,
+    20, 34, 44, 52,
+  ]
+    .map((n) => `${imgKey}${subKey}`[n])
+    .join('')
+    .slice(0, 32);
+
   // 计算wbi签名
   const wbiSign = createHash('md5')
-    .update(search.toString() + getMixinKey(imgKey + subKey))
+    .update(search.toString() + mixinKey)
     .digest('hex');
   search.set('w_rid', wbiSign);
 
@@ -69,8 +69,7 @@ const getWbiKeys = async () => {
   const resp = await http.get('https://api.bilibili.com/x/web-interface/nav', {
     headers: {
       Cookie: 'SESSDATA=xxxxxx',
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+      'User-Agent': UA,
       Referer: 'https://www.bilibili.com/',
     },
   });
@@ -99,11 +98,16 @@ const getBiliWbi = async (): Promise<string> => {
 
 const mainGetBilibiliRank = async (type: number) => {
   const wbiData = await getBiliWbi();
-  const resp = await http.get(`https://api.bilibili.com/x/web-interface/ranking/v2?rid=${type}&type=all&${wbiData}`, {
+  const resp = await http.get<{
+    code: number;
+    data: {
+      list: any[];
+    };
+    message: string;
+  }>(`https://api.bilibili.com/x/web-interface/ranking/v2?rid=${type}&type=all&${wbiData}`, {
     headers: {
       Referer: 'https://www.bilibili.com/ranking/all',
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+      'User-Agent': UA,
       Accept:
         'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
       'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -121,38 +125,40 @@ const mainGetBilibiliRank = async (type: number) => {
   if (resp.data.code !== 0) {
     throw new Error(resp.data.message);
   }
-  return (resp.data.data.list as any[]).map((item) => ({
+  return resp.data.data.list.map((item) => ({
     title: item.title,
     description: item.desc || '该视频暂无简介',
     cover: item.pic,
     author: item.owner?.name,
     publishTime: dayjs.unix(item.pubdate).format('YYYY-MM-DD HH:mm:ss'),
     view: item.stat?.view || 0,
-    url: item.short_link_v2 || `https://www.bilibili.com/video/${item.bvid}`,
+    link: item.short_link_v2 || `https://www.bilibili.com/video/${item.bvid}`,
   }));
 };
 
 const backupGetBilibiliRank = async (type: number) => {
-  const resp = await http.get(
-    `https://api.bilibili.com/x/web-interface/ranking?jsonp=jsonp?rid=${type}&type=all&callback=__jp0`,
-    {
-      headers: {
-        Referer: 'https://www.bilibili.com/ranking/all',
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-      },
+  const resp = await http.get<{
+    code: number;
+    data: {
+      list: any[];
+    };
+    message: string;
+  }>(`https://api.bilibili.com/x/web-interface/ranking?jsonp=jsonp?rid=${type}&type=all&callback=__jp0`, {
+    headers: {
+      Referer: 'https://www.bilibili.com/ranking/all',
+      'User-Agent': UA,
     },
-  );
+  });
   if (resp.data.code !== 0) {
     throw new Error(resp.data.message);
   }
-  return (resp.data.data.list as any[]).map((item) => ({
+  return resp.data.data.list.map((item) => ({
     title: item.title,
     description: item.desc || '该视频暂无简介',
     cover: item.pic,
     author: item.author,
     view: item.video_review,
-    url: `https://www.bilibili.com/video/${item.bvid}`,
+    link: `https://www.bilibili.com/video/${item.bvid}`,
   }));
 };
 

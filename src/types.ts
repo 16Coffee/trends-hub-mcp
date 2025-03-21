@@ -1,4 +1,4 @@
-import type { ListToolsResult, ServerResult } from '@modelcontextprotocol/sdk/types.js';
+import type { ServerResult } from '@modelcontextprotocol/sdk/types.js';
 import type { z } from 'zod';
 
 export type ToolConfig = {

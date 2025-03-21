@@ -30,4 +30,4 @@
 
 ## 鸣谢
 
-- [DailyHotApi](https://github.com/imsyy/DailyHotApi)
+- [DailyHotApi](https://github.com/imsyy/DailyHotApi) - 部分工具的实现参考
