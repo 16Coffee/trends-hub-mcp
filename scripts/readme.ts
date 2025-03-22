@@ -1,8 +1,8 @@
+import { promises as fs } from 'node:fs';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import type { RsbuildPlugin } from '@rsbuild/core';
 import { logger } from '@rslib/core';
-import { promises as fs } from 'node:fs';
 import { version } from '../package.json';
 
 interface Options {
@@ -26,15 +26,15 @@ const getToolsContent = async () => {
 
   await client.close();
 
-  let toolsContent = '| 工具名称 | 描述 |\n| --- | --- |\n';
+  let result = '| 工具名称 | 描述 |\n| --- | --- |\n';
   for (const tool of resp.tools) {
-    toolsContent += `| ${tool.name} | ${tool.description} |\n`;
+    result += `| ${tool.name} | ${tool.description} |\n`;
   }
 
-  return toolsContent;
+  return result;
 };
 
-const getUsageContent = () => {
+const getUsageJSONContent = () => {
   const mcpServerConfig = {
     mcpServers: {
       'trends-hub': {
@@ -43,10 +43,17 @@ const getUsageContent = () => {
       },
     },
   };
-  let usageContent = '```json\n';
-  usageContent += JSON.stringify(mcpServerConfig, null, 2);
-  usageContent += '\n```';
-  return usageContent;
+  let result = '```json\n';
+  result += JSON.stringify(mcpServerConfig, null, 2);
+  result += '\n```';
+  return result;
+};
+
+const getUsageBashContent = () => {
+  let result = '```bash\n';
+  result += `npx -y mcp-trends-hub@${version ?? 'latest'}`;
+  result += '\n```';
+  return result;
 };
 
 const createContentUpdater = (initialContent: string) => {
@@ -82,7 +89,8 @@ export const readmePlugin = ({ readmePath }: Options): RsbuildPlugin => {
           const contentUpdater = createContentUpdater(readmeContent);
 
           await contentUpdater.update('tools', getToolsContent);
-          await contentUpdater.update('usage', getUsageContent);
+          await contentUpdater.update('usage-json', getUsageJSONContent);
+          await contentUpdater.update('usage-bash', getUsageBashContent);
           await fs.writeFile(readmePath, contentUpdater.getContent());
 
           logger.success('README.md 更新成功');

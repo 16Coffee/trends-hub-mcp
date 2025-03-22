@@ -1,6 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
 import { http } from './http';
-import { logger } from './logger';
 
 export const getRss = async (url: string) => {
   const resp = await http.get(url);
@@ -10,7 +9,6 @@ export const getRss = async (url: string) => {
 
 export const getRssItems = async (url: string) => {
   const data = await getRss(url);
-  logger.info(data);
   if (!Array.isArray(data.rss?.channel?.item)) {
     return [];
   }

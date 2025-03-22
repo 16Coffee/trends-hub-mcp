@@ -1,5 +1,5 @@
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
 import { inspect } from 'node:util';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
@@ -15,10 +15,10 @@ class Logger {
   }
 
   log(level: Parameters<McpServer['server']['sendLoggingMessage']>[0]['level'], data: unknown) {
-    this.mcpServer?.server.sendLoggingMessage({
-      level,
-      data,
-    });
+    // this.mcpServer?.server.sendLoggingMessage({
+    //   level,
+    //   data,
+    // });
     if (process.env.NODE_ENV === 'development') {
       const date = new Date().toLocaleString();
       const message = inspect(data, true, Number.POSITIVE_INFINITY, false);

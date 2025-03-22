@@ -46,7 +46,7 @@ const bbcRequestSchema = z
 
 export default defineToolConfig({
   name: 'get-bbc-news',
-  description: '获取 BBC 新闻',
+  description: '获取 BBC 新闻，提供全球新闻、英国新闻、商业、政治、健康、教育、科技、娱乐等资讯',
   zodSchema: bbcRequestSchema,
   func: async (args) => {
     const { url } = bbcRequestSchema.parse(args);

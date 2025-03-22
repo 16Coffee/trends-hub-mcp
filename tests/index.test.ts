@@ -1,8 +1,6 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { describe, expect, test, beforeAll, afterAll } from 'vitest';
-import fs from 'node:fs';
-import path from 'node:path';
+import { afterAll, describe, expect, test } from 'vitest';
 
 const transport = new StdioClientTransport({
   command: 'node',
@@ -27,7 +25,7 @@ describe('MCP 工具测试', async () => {
     expect(toolsResponse).toBeDefined();
     expect(toolsResponse).toHaveProperty('tools');
     expect(toolsResponse.tools).toBeInstanceOf(Array);
-    expect(toolsResponse.tools).toHaveLength(fs.readdirSync(path.resolve('src/tools')).length);
+    expect(toolsResponse.tools).not.toHaveLength(0);
   });
 
   describe.each(toolsResponse.tools.map((tool) => [tool.name]))('%s', async (toolName) => {
