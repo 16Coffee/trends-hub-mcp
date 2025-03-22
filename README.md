@@ -38,14 +38,14 @@
 
   例如：
 
-  ```json
+  ```jsonc
   {
     "mcpServers": {
       "trends-hub": {
         "command": "npx",
         "args": ["-y", "mcp-trends-hub"],
         "env": {
-          "TRENDS_HUB_HIDDEN_FIELDS": "cover,get-nytimes-news:description"
+          "TRENDS_HUB_HIDDEN_FIELDS": "cover,get-nytimes-news:description" // 隐藏所有工具的封面返回和纽约时报新闻的描述
         }
       }
     }
