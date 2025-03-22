@@ -1,5 +1,15 @@
 # mcp-trends-hub
 
+## 1.5.0
+
+### Minor Changes
+
+- 7200921: 更新各工具的更详细的内容概述，更便于 LLM 理解各工具的作用和使用场景
+
+### Patch Changes
+
+- de40421: 优化 nytimes 请求模式的分类描述
+
 ## 1.4.1
 
 ### Patch Changes
