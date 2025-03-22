@@ -8,7 +8,7 @@
 ## 示例
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/cace-drak.png">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/case-dark.png">
   <img src="./assets/case-light.png" alt="Trends Hub 示例">
 </picture>
 
