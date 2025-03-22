@@ -14,10 +14,7 @@
   "types": "./dist/index.d.ts",
   "bin": "./dist/index.cjs",
   "description": "🔥 基于 Model Context Protocol (MCP) 协议的全网热点趋势一站式聚合服务",
-  "keywords": [
-    "mcp",
-    "trends"
-  ],
+  "keywords": ["mcp", "trends"],
   "author": "baranwang",
   "license": "MIT",
   "repository": {
@@ -27,9 +24,7 @@
   "bugs": {
     "url": "https://github.com/baranwang/mcp-trends-hub/issues"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
@@ -59,6 +54,7 @@
     "@rsbuild/core": "^1.2.19",
     "@rslib/core": "^0.5.4",
     "@types/node": "^22.8.1",
+    "lefthook": "^1.11.3",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   },
