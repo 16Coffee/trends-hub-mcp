@@ -1,9 +1,18 @@
 {
   "name": "mcp-trends-hub",
   "version": "1.4.0",
-  "main": "./dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/index.js",
+  "bin": "./dist/index.cjs",
   "description": "🔥 基于 Model Context Protocol (MCP) 协议的全网热点趋势一站式聚合服务",
   "keywords": [
     "mcp",
