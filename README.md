@@ -62,7 +62,11 @@
 
 ## 示例
 
-![toutiao](./assets/toutiao.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/cace-drak.png">
+  <img src="./assets/case-light.png" alt="Trends Hub 示例">
+</picture>
+
 
 ## 鸣谢
 
