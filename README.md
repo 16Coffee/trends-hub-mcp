@@ -36,7 +36,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-trends-hub@1.5.0"
+        "mcp-trends-hub@1.6.0"
       ]
     }
   }
@@ -49,8 +49,7 @@
 
 <!-- usage-bash-start -->
 ```bash
-npx -y mcp-trends-hub@1.5.0
-
+npx -y mcp-trends-hub@1.6.0
 ```
 
 <!-- usage-bash-end -->

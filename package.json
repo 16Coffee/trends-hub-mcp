@@ -1,6 +1,6 @@
 {
   "name": "mcp-trends-hub",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
   "exports": {
     ".": {
@@ -14,7 +14,10 @@
   "types": "./dist/index.d.ts",
   "bin": "./dist/index.cjs",
   "description": "🔥 基于 Model Context Protocol (MCP) 协议的全网热点趋势一站式聚合服务",
-  "keywords": ["mcp", "trends"],
+  "keywords": [
+    "mcp",
+    "trends"
+  ],
   "author": "baranwang",
   "license": "MIT",
   "repository": {
@@ -24,7 +27,9 @@
   "bugs": {
     "url": "https://github.com/baranwang/mcp-trends-hub/issues"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
