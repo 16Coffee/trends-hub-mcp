@@ -177,7 +177,6 @@ export default defineToolConfig({
   zodSchema: bilibiliRequestSchema,
   func: async (args: unknown) => {
     const { type } = bilibiliRequestSchema.parse(args);
-    const data = await getBilibiliRank(type);
-    return handleSuccessResult(...data);
+    return getBilibiliRank(type);
   },
 });

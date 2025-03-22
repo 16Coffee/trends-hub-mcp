@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dayjs, defineToolConfig, handleSuccessResult, http } from '../utils';
+import { dayjs, defineToolConfig, http } from '../utils';
 
 const get36krRequestSchema = z.object({
   type: z
@@ -10,7 +10,8 @@ const get36krRequestSchema = z.object({
       z.literal('collect').describe('收藏榜'),
     ])
     .optional()
-    .default('hot'),
+    .default('hot')
+    .describe('分类'),
 });
 
 const LIST_TYPE_MAP: Record<z.infer<typeof get36krRequestSchema>['type'], string> = {
@@ -22,13 +23,13 @@ const LIST_TYPE_MAP: Record<z.infer<typeof get36krRequestSchema>['type'], string
 
 export default defineToolConfig({
   name: 'get-36kr-trending',
-  description: '获取36氪热榜',
+  description: '获取 36 氪热榜',
   zodSchema: get36krRequestSchema,
   func: async (args) => {
     const { type } = get36krRequestSchema.parse(args);
 
     const resp = await http.post<{
-      data: Record<string, any[]>
+      data: Record<string, any[]>;
     }>(
       `https://gateway.36kr.com/api/mis/nav/home/nav/rank/${type}`,
       {
@@ -45,22 +46,20 @@ export default defineToolConfig({
         },
       },
     );
-    
-    return handleSuccessResult(
-      ...resp.data.data[LIST_TYPE_MAP[type]].map((item)=>{
-        const data= item.templateMaterial
-        return {
-          title: data.widgetTitle,
-          cover: data.widgetImage,
-          author: data.authorName,
-          publish_time: dayjs(data.publishTime).toISOString(),
-          read_count: data.statRead,
-          collect_count: data.statCollect,
-          comment_count: data.statComment,
-          praise_count: data.statPraise,
-          link: `https://www.36kr.com/p/${data.itemId}`,
-        }
-      })
-    )
+
+    return resp.data.data[LIST_TYPE_MAP[type]].map((item) => {
+      const data = item.templateMaterial;
+      return {
+        title: data.widgetTitle,
+        cover: data.widgetImage,
+        author: data.authorName,
+        publish_time: dayjs(data.publishTime).toISOString(),
+        read_count: data.statRead,
+        collect_count: data.statCollect,
+        comment_count: data.statComment,
+        praise_count: data.statPraise,
+        link: `https://www.36kr.com/p/${data.itemId}`,
+      };
+    });
   },
 });

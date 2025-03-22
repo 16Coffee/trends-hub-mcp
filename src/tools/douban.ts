@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { defineToolConfig, handleSuccessResult, http } from '../utils';
+import { defineToolConfig, http } from '../utils';
 
 const doubanRankSchema = z.object({
   type: z
@@ -42,21 +42,19 @@ export default defineToolConfig({
     if (!Array.isArray(resp.data.subject_collection_items)) {
       throw new Error('获取豆瓣实时热门榜失败');
     }
-    return handleSuccessResult(
-      ...resp.data.subject_collection_items.map((item) => {
-        return {
-          type_name: item.type_name,
-          title: item.title,
-          info: item.info,
-          cover: item.cover.url,
-          year: item.year,
-          release_date: item.release_date,
-          link: item.url,
-          popularity: item.score,
-          rating_count: item.rating.count,
-          rating_value: item.rating.count > 0 ? item.rating.value : undefined,
-        };
-      }),
-    );
+    return resp.data.subject_collection_items.map((item) => {
+      return {
+        type_name: item.type_name,
+        title: item.title,
+        info: item.info,
+        cover: item.cover.url,
+        year: item.year,
+        release_date: item.release_date,
+        link: item.url,
+        popularity: item.score,
+        rating_count: item.rating.count,
+        rating_value: item.rating.count > 0 ? item.rating.value : undefined,
+      };
+    });
   },
 });

@@ -28,23 +28,21 @@ export default defineToolConfig({
       throw new Error(resp.data.error_msg || '获取什么值得买热门失败');
     }
 
-    return handleSuccessResult(
-      ...resp.data.data.map((item) => {
-        return {
-          title: item.title,
-          description: item.content,
-          cover: item.pic_url,
-          author: item.nickname,
-          publish_time: item.publish_time,
-          collection_count: item.collection_count,
-          comment_count: item.comment_count,
-          up_count: item.up_count,
-          hashtags: safeJsonParse<any[]>(item.tag)
-            ?.map((tag) => `#${tag.title}`)
-            .join(' '),
-          link: item.article_url,
-        };
-      }),
-    );
+    return resp.data.data.map((item) => {
+      return {
+        title: item.title,
+        description: item.content,
+        cover: item.pic_url,
+        author: item.nickname,
+        publish_time: item.publish_time,
+        collection_count: item.collection_count,
+        comment_count: item.comment_count,
+        up_count: item.up_count,
+        hashtags: safeJsonParse<any[]>(item.tag)
+          ?.map((tag) => `#${tag.title}`)
+          .join(' '),
+        link: item.article_url,
+      };
+    });
   },
 });

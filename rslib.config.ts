@@ -1,5 +1,7 @@
 import { defineConfig } from '@rslib/core';
-import { version } from "./package.json";
+import { version } from './package.json';
+import { readmePlugin } from './scripts/readme';
+import path from 'node:path';
 
 export default defineConfig({
   lib: [
@@ -11,7 +13,8 @@ export default defineConfig({
   source: {
     define: {
       'process.env.PACKAGE_VERSION': JSON.stringify(version),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    },
   },
+  plugins: [readmePlugin({ readmePath: path.resolve('README.md') })],
 });

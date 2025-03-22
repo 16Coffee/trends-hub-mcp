@@ -1,4 +1,5 @@
-import { defineToolConfig, handleSuccessResult, http } from '../utils';
+import { defineToolConfig, http } from '../utils';
+import { URL } from 'node:url';
 
 export default defineToolConfig({
   name: 'get-toutiao-trending',
@@ -14,17 +15,15 @@ export default defineToolConfig({
     if (!Array.isArray(resp.data.data)) {
       throw new Error('获取今日头条热榜失败');
     }
-    return handleSuccessResult(
-      ...resp.data.data.map((item) => {
-        const link = new URL(item.Url);
-        link.search = '';
-        return {
-          title: item.Title,
-          cover: item.Image.url,
-          popularity: item.HotValue,
-          link: link.toString(),
-        };
-      }),
-    );
+    return resp.data.data.map((item) => {
+      const link = new URL(item.Url);
+      link.search = '';
+      return {
+        title: item.Title,
+        cover: item.Image.url,
+        popularity: item.HotValue,
+        link: link.toString(),
+      };
+    });
   },
 });

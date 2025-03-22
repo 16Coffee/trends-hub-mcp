@@ -1,5 +1,5 @@
 import { URL } from 'node:url';
-import { defineToolConfig, handleSuccessResult, http } from '../utils';
+import { defineToolConfig, http } from '../utils';
 
 export default defineToolConfig({
   name: 'get-weibo-trending',
@@ -14,22 +14,20 @@ export default defineToolConfig({
     if (resp.data.ok !== 1 || !Array.isArray(resp.data.data.realtime)) {
       throw new Error('获取微博热搜榜失败');
     }
-    return handleSuccessResult(
-      ...resp.data.data.realtime
-        .filter((item) => item.is_ad !== 1)
-        .map((item: any) => {
-          const key = item.word_scheme || `#${item.word}`;
-          const url = new URL('https://s.weibo.com/weibo');
-          url.searchParams.set('q', key);
-          url.searchParams.set('band_rank', '1');
-          url.searchParams.set('Refer', 'top');
-          return {
-            title: item.word,
-            description: item.note || key,
-            popularity: item.num,
-            link: url.toString(),
-          };
-        }),
-    );
+    return resp.data.data.realtime
+      .filter((item) => item.is_ad !== 1)
+      .map((item: any) => {
+        const key = item.word_scheme || `#${item.word}`;
+        const url = new URL('https://s.weibo.com/weibo');
+        url.searchParams.set('q', key);
+        url.searchParams.set('band_rank', '1');
+        url.searchParams.set('Refer', 'top');
+        return {
+          title: item.word,
+          description: item.note || key,
+          popularity: item.num,
+          link: url.toString(),
+        };
+      });
   },
 });

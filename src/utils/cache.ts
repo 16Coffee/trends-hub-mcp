@@ -1,51 +1,44 @@
-import os from 'node:os'
-import path from 'node:path'
-import fs from 'node:fs'
+import os from 'node:os';
+import path from 'node:path';
+import fs from 'node:fs';
 
 class CacheStorage {
   private get cachePath() {
-    const cachePath = path.join(
-      os.tmpdir(),
-      'mcp-trends-hub',
-      'cache'
-    )
+    const cachePath = path.join(os.tmpdir(), 'mcp-trends-hub', 'cache');
     if (!fs.existsSync(cachePath)) {
-      fs.mkdirSync(cachePath, { recursive: true })
+      fs.mkdirSync(cachePath, { recursive: true });
     }
-    return cachePath
+    return cachePath;
   }
 
   private getPathByKey(key: string) {
-    return path.join(
-      this.cachePath,
-      key
-    )
+    return path.join(this.cachePath, key);
   }
 
   getItem(key: string) {
-    const itemPath = this.getPathByKey(key)
+    const itemPath = this.getPathByKey(key);
     if (!fs.existsSync(itemPath)) {
-      return null
+      return null;
     }
-    return fs.readFileSync(itemPath, 'utf-8')
+    return fs.readFileSync(itemPath, 'utf-8');
   }
 
   setItem(key: string, value: string) {
-    const itemPath = this.getPathByKey(key)
-    fs.writeFileSync(itemPath, value)
+    const itemPath = this.getPathByKey(key);
+    fs.writeFileSync(itemPath, value);
   }
 
   removeItem(key: string) {
-    const itemPath = this.getPathByKey(key)
+    const itemPath = this.getPathByKey(key);
     if (!fs.existsSync(itemPath)) {
-      return
+      return;
     }
-    fs.unlinkSync(itemPath)
+    fs.unlinkSync(itemPath);
   }
 
   clear() {
-    fs.rmSync(this.cachePath, { recursive: true })
+    fs.rmSync(this.cachePath, { recursive: true });
   }
 }
 
-export const cacheStorage = new CacheStorage()
+export const cacheStorage = new CacheStorage();

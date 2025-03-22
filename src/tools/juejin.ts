@@ -68,22 +68,20 @@ export default defineToolConfig(async () => {
       if (resp.data.err_no !== 0) {
         throw new Error(resp.data.err_msg || '获取掘金文章榜失败');
       }
-      return handleSuccessResult(
-        ...resp.data.data.map((item) => {
-          return {
-            title: item.content.title,
-            brief: item.content.brief || undefined,
-            author: item.author.name,
-            popularity: item.content_counter.hot_rank,
-            view_count: item.content_counter.view,
-            like_count: item.content_counter.like,
-            collect_count: item.content_counter.collect,
-            comment_count: item.content_counter.comment_count,
-            interact_count: item.content_counter.interact_count,
-            link: `https://juejin.cn/post/${item.content.content_id}`,
-          };
-        }),
-      );
+      return resp.data.data.map((item) => {
+        return {
+          title: item.content.title,
+          brief: item.content.brief || undefined,
+          author: item.author.name,
+          popularity: item.content_counter.hot_rank,
+          view_count: item.content_counter.view,
+          like_count: item.content_counter.like,
+          collect_count: item.content_counter.collect,
+          comment_count: item.content_counter.comment_count,
+          interact_count: item.content_counter.interact_count,
+          link: `https://juejin.cn/post/${item.content.content_id}`,
+        };
+      });
     },
   };
 });

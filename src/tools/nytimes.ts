@@ -1,0 +1,90 @@
+import { z } from 'zod';
+import { defineToolConfig, getRssItems } from '../utils';
+
+const nytimesRequestSchema = z
+  .object({
+    region: z
+      .union([z.literal('cn').describe('中文'), z.literal('global').describe('全球')])
+      .optional()
+      .default('cn'),
+    section: z
+      .enum([
+        'Africa',
+        'Americas',
+        'ArtandDesign',
+        'Arts',
+        'AsiaPacific',
+        'Automobiles',
+        'Baseball',
+        'Books/Review',
+        'Business',
+        'Climate',
+        'CollegeBasketball',
+        'CollegeFootball',
+        'Dance',
+        'Dealbook',
+        'DiningandWine',
+        'Economy',
+        'Education',
+        'EnergyEnvironment',
+        'Europe',
+        'FashionandStyle',
+        'Golf',
+        'Health',
+        'Hockey',
+        'HomePage',
+        'Jobs',
+        'Lens',
+        'MediaandAdvertising',
+        'MiddleEast',
+        'MostEmailed',
+        'MostShared',
+        'MostViewed',
+        'Movies',
+        'Music',
+        'NYRegion',
+        'Obituaries',
+        'PersonalTech',
+        'Politics',
+        'ProBasketball',
+        'ProFootball',
+        'RealEstate',
+        'Science',
+        'SmallBusiness',
+        'Soccer',
+        'Space',
+        'Sports',
+        'SundayBookReview',
+        'Sunday-Review',
+        'Technology',
+        'Television',
+        'Tennis',
+        'Theater',
+        'TMagazine',
+        'Travel',
+        'Upshot',
+        'US',
+        'Weddings',
+        'Well',
+        'World',
+        'YourMoney',
+      ])
+      .optional()
+      .describe('分类，当 `region` 为 `cn` 时无效'),
+  })
+  .transform((values) => {
+    if (values.region === 'cn') {
+      return 'https://cn.nytimes.com/rss/';
+    }
+    return `https://rss.nytimes.com/services/xml/rss/nyt/${values.section || 'HomePage'}.xml`;
+  });
+
+export default defineToolConfig({
+  name: 'get-nytimes-news',
+  description: '获取纽约时报新闻',
+  zodSchema: nytimesRequestSchema,
+  func: async (args) => {
+    const url = nytimesRequestSchema.parse(args);
+    return getRssItems(url);
+  },
+});

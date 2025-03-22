@@ -23,14 +23,12 @@ export default defineToolConfig({
     if (!Array.isArray(resp.data.objects)) {
       throw new Error('获取爱范儿快讯失败');
     }
-    return handleSuccessResult(
-      ...resp.data.objects.map((item) => {
-        return {
-          title: item.post_title,
-          description: item.post_content,
-          link: item.buzz_original_url || `https://www.ifanr.com/${item.post_id}`,
-        };
-      }),
-    );
+    return resp.data.objects.map((item) => {
+      return {
+        title: item.post_title,
+        description: item.post_content,
+        link: item.buzz_original_url || `https://www.ifanr.com/${item.post_id}`,
+      };
+    });
   },
 });

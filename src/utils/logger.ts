@@ -1,34 +1,46 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { inspect } from 'node:util';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 class Logger {
   private get logPath() {
     return path.resolve('app.log');
   }
 
-  log(badge: string, data: unknown) {
-    const date = new Date().toISOString();
-    const message = inspect(data, true, Number.POSITIVE_INFINITY, false);
-    fs.appendFileSync(this.logPath, `${date} ${badge || ''} ${message}\n`);
+  private mcpServer: McpServer | null = null;
+
+  setMcpServer(mcpServer: McpServer) {
+    this.mcpServer = mcpServer;
+  }
+
+  log(level: Parameters<McpServer['server']['sendLoggingMessage']>[0]['level'], data: unknown) {
+    this.mcpServer?.server.sendLoggingMessage({
+      level,
+      data,
+    });
+    if (process.env.NODE_ENV === 'development') {
+      const date = new Date().toLocaleString();
+      const message = inspect(data, true, Number.POSITIVE_INFINITY, false);
+      fs.appendFileSync(this.logPath, `${date} [${level.toLocaleLowerCase()}] ${message}\n`);
+    }
   }
 
   info(data: unknown) {
-    this.log('[INFO]', data);
+    this.log('info', data);
   }
 
   error(data: unknown) {
-    this.log('[ERROR]', data);
+    this.log('error', data);
   }
 
   warn(data: unknown) {
-    this.log('[WARN]', data);
+    this.log('warning', data);
   }
 
   debug(data: unknown) {
-    this.log('[DEBUG]', data);
+    this.log('debug', data);
   }
 }
 
-export const logger =
-  process.env.NODE_ENV === 'development' ? new Logger() : new Proxy({} as Logger, { get: () => () => {} });
+export const logger = new Logger();

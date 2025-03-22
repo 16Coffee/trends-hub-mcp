@@ -40,16 +40,14 @@ export default defineToolConfig({
     if (resp.data?.status_code !== 0 || !Array.isArray(resp.data.data.word_list)) {
       throw new Error('获取抖音热榜失败');
     }
-    return handleSuccessResult(
-      ...resp.data.data.word_list.map((item) => {
-        return {
-          title: item.word,
-          eventTime: dayjs.unix(item.event_time).toISOString(),
-          cover: item.word_cover?.url_list?.[0],
-          popularity: item.hot_value,
-          link: `https://www.douyin.com/hot/${item.sentence_id}`,
-        };
-      }),
-    );
+    return resp.data.data.word_list.map((item) => {
+      return {
+        title: item.word,
+        eventTime: dayjs.unix(item.event_time).toISOString(),
+        cover: item.word_cover?.url_list?.[0],
+        popularity: item.hot_value,
+        link: `https://www.douyin.com/hot/${item.sentence_id}`,
+      };
+    });
   },
 });

@@ -31,19 +31,17 @@ export default defineToolConfig({
       throw new Error(resp.data.msg || '获取少数派热榜失败');
     }
 
-    return handleSuccessResult(
-      ...resp.data.data.map((item) => {
-        return {
-          title: item.title,
-          summary: item.summary,
-          author: item.author.nickname,
-          released_time: dayjs.unix(item.released_time).toISOString(),
-          comment_count: item.comment_count,
-          like_count: item.like_count,
-          view_count: item.view_count,
-          link: `https://sspai.com/post/${item.id}`,
-        };
-      }),
-    );
+    return resp.data.data.map((item) => {
+      return {
+        title: item.title,
+        summary: item.summary,
+        author: item.author.nickname,
+        released_time: dayjs.unix(item.released_time).toISOString(),
+        comment_count: item.comment_count,
+        like_count: item.like_count,
+        view_count: item.view_count,
+        link: `https://sspai.com/post/${item.id}`,
+      };
+    });
   },
 });

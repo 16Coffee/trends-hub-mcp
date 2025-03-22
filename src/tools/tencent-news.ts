@@ -24,20 +24,18 @@ export default defineToolConfig({
       throw new Error('获取腾讯新闻热点榜失败');
     }
 
-    return handleSuccessResult(
-      ...resp.data.idlist[0].newslist
-        .filter((_, index) => index !== 0)
-        .map((item) => {
-          return {
-            title: item.title,
-            description: item.abstract,
-            cover: item.thumbnails?.[0],
-            source: item.source,
-            popularity: item.hotEvent.hotScore,
-            publish_time: item.time,
-            link: item.url,
-          };
-        }),
-    );
+    return resp.data.idlist[0].newslist
+      .filter((_, index) => index !== 0)
+      .map((item) => {
+        return {
+          title: item.title,
+          description: item.abstract,
+          cover: item.thumbnails?.[0],
+          source: item.source,
+          popularity: item.hotEvent.hotScore,
+          publish_time: item.time,
+          link: item.url,
+        };
+      });
   },
 });

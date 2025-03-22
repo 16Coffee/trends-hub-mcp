@@ -20,18 +20,16 @@ export default defineToolConfig({
     if (!Array.isArray(resp.data.data)) {
       throw new Error('获取知乎热榜失败');
     }
-    return handleSuccessResult(
-      ...resp.data.data.map((item) => {
-        const data = item.target;
-        return {
-          title: data.title,
-          description: data.excerpt,
-          cover: item.children[0].thumbnail,
-          created: dayjs.unix(data.created).toISOString(),
-          popularity: item.detail_text,
-          link: `https://www.zhihu.com/question/${data.id}`,
-        };
-      }),
-    );
+    return resp.data.data.map((item) => {
+      const data = item.target;
+      return {
+        title: data.title,
+        description: data.excerpt,
+        cover: item.children[0].thumbnail,
+        created: dayjs.unix(data.created).toISOString(),
+        popularity: item.detail_text,
+        link: `https://www.zhihu.com/question/${data.id}`,
+      };
+    });
   },
 });

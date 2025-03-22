@@ -6,7 +6,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { z } from 'zod';
 import zodToJsonSchema from 'zod-to-json-schema';
 import type { ToolConfig } from './types';
-import { handleErrorResult, logger } from './utils';
+import { handleErrorResult, handleSuccessResult, logger } from './utils';
 
 async function loadToolConfigurations(toolsContext: Rspack.Context) {
   const toolPromises = toolsContext.keys().map((key) => {
@@ -34,9 +34,11 @@ const mcpServer = new McpServer(
   {
     capabilities: {
       tools: {},
+      logging: {},
     },
   },
 );
+logger.setMcpServer(mcpServer);
 
 (async () => {
   try {
@@ -68,16 +70,14 @@ const mcpServer = new McpServer(
           throw new Error(`Tool not found: ${request.params.name}`);
         }
         const result = await tool.func(request.params.arguments ?? {});
-        return result;
+        return handleSuccessResult(result, request.params.name);
       } catch (error) {
         return handleErrorResult(error);
       }
     });
 
-    // 连接传输层
     const transport = new StdioServerTransport();
     await mcpServer.connect(transport);
-    logger.info('MCP Trends Hub server started successfully');
   } catch (error) {
     logger.error('Failed to start MCP server');
     logger.error(error);
