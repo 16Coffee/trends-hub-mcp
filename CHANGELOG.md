@@ -1,5 +1,13 @@
 # mcp-trends-hub
 
+## 1.6.0
+
+### Minor Changes
+
+- ce74e8d: 添加获取 BBC 新闻工具及其配置
+- 645622e: 更新豆瓣工具描述，增强对作品类型的说明，并添加标签信息
+- ae0e048: 添加自定义 RSS 工具
+
 ## 1.5.0
 
 ### Minor Changes
