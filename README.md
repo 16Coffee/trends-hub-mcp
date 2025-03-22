@@ -15,7 +15,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-trends-hub@1.3.0"
+        "mcp-trends-hub@1.4.0"
       ]
     }
   }
@@ -39,7 +39,9 @@
 | get-bilibili-rank | 获取哔哩哔哩排行榜 |
 | get-douban-rank | 获取豆瓣实时热门榜 |
 | get-douyin-trending | 获取抖音热榜 |
+| get-gcores-new | 获取机核新闻 |
 | get-ifanr-news | 获取爱范儿快讯 |
+| get-infoq-news | 获取 InfoQ 新闻 |
 | get-juejin-article-rank | 获取掘金文章榜 |
 | get-netease-news-trending | 获取网易新闻热点榜 |
 | get-nytimes-news | 获取纽约时报新闻 |

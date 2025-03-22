@@ -1,5 +1,12 @@
 # mcp-trends-hub
 
+## 1.4.1
+
+### Patch Changes
+
+- 95ca6d9: 更新发布工作流，添加版本命令
+- d505342: 更新 package.json 以支持模块导出
+
 ## 1.4.0
 
 ### Minor Changes
