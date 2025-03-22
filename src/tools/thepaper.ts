@@ -2,7 +2,7 @@ import { dayjs, defineToolConfig, handleSuccessResult, http } from '../utils';
 
 export default defineToolConfig({
   name: 'get-thepaper-trending',
-  description: '获取澎湃新闻热榜',
+  description: '获取澎湃新闻热榜，包含时政要闻、财经动态、社会事件、文化教育及深度报道的高质量中文新闻资讯',
   func: async () => {
     const resp = await http.get<{
       resultCode: number;

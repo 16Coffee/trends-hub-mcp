@@ -7,7 +7,7 @@ const tencentNewsRequestSchema = z.object({
 
 export default defineToolConfig({
   name: 'get-tencent-news-trending',
-  description: '获取腾讯新闻热点榜',
+  description: '获取腾讯新闻热点榜，包含国内外时事、社会热点、财经资讯、娱乐动态及体育赛事的综合性中文新闻资讯',
   zodSchema: tencentNewsRequestSchema,
   func: async (args) => {
     const { page_size } = tencentNewsRequestSchema.parse(args);

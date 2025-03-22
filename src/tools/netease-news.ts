@@ -2,7 +2,7 @@ import { http, defineToolConfig } from '../utils';
 
 export default defineToolConfig({
   name: 'get-netease-news-trending',
-  description: '获取网易新闻热点榜',
+  description: '获取网易新闻热点榜，包含时政要闻、社会事件、财经资讯、科技动态及娱乐体育的全方位中文新闻资讯',
   func: async () => {
     const resp = await http.get<{
       code: number;

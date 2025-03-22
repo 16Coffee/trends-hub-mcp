@@ -7,7 +7,7 @@ const zhihuTrendingSchema = z.object({
 
 export default defineToolConfig({
   name: 'get-zhihu-trending',
-  description: '获取知乎热榜',
+  description: '获取知乎热榜，包含时事热点、社会话题、科技动态、娱乐八卦等多领域的热门问答和讨论的中文资讯',
   zodSchema: zhihuTrendingSchema,
   func: async (args: unknown) => {
     const { limit } = zhihuTrendingSchema.parse(args);

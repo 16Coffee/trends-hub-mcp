@@ -18,7 +18,7 @@ const getCsrfToken = async () => {
 
 export default defineToolConfig({
   name: 'get-douyin-trending',
-  description: '获取抖音热榜',
+  description: '获取抖音热搜榜单，展示当下最热门的社会话题、娱乐事件、网络热点和流行趋势',
   func: async () => {
     const csrfToken = await getCsrfToken();
     const resp = await http.get<{

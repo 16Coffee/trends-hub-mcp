@@ -78,7 +78,7 @@ const getWereadID = (bookId: string) => {
 
 export default defineToolConfig({
   name: 'get-weread-rank',
-  description: '获取微信读书排行榜',
+  description: '获取微信读书排行榜，包含热门小说、畅销书籍、新书推荐及各类文学作品的阅读数据和排名信息',
   zodSchema: wereadRequestSchema,
   func: async (args) => {
     const { category } = wereadRequestSchema.parse(args);

@@ -12,7 +12,7 @@ const sspaiRequestSchema = z.object({
 
 export default defineToolConfig({
   name: 'get-sspai-rank',
-  description: '获取少数派热榜',
+  description: '获取少数派热榜，包含数码产品评测、软件应用推荐、生活方式指南及效率工作技巧的优质中文科技生活类内容',
   zodSchema: sspaiRequestSchema,
   func: async (args) => {
     const { tag, limit } = sspaiRequestSchema.parse(args);

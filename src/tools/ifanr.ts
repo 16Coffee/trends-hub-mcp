@@ -8,7 +8,7 @@ const ifanrRequestSchema = z.object({
 
 export default defineToolConfig({
   name: 'get-ifanr-news',
-  description: '获取爱范儿快讯',
+  description: '获取爱范儿科技快讯，包含最新的科技产品、数码设备、互联网动态等前沿科技资讯',
   zodSchema: ifanrRequestSchema,
   func: async (args: unknown) => {
     const { limit, offset } = ifanrRequestSchema.parse(args);

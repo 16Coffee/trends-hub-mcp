@@ -10,7 +10,7 @@ const smzdmRequestSchema = z.object({
 
 export default defineToolConfig({
   name: 'get-smzdm-rank',
-  description: '获取什么值得买热门',
+  description: '获取什么值得买热门，包含商品推荐、优惠信息、购物攻略、产品评测及消费经验分享的实用中文消费类资讯',
   zodSchema: smzdmRequestSchema,
   func: async (args) => {
     const { unit } = smzdmRequestSchema.parse(args);

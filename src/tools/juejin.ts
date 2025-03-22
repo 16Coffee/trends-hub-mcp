@@ -48,7 +48,7 @@ export default defineToolConfig(async () => {
 
   return {
     name: 'get-juejin-article-rank',
-    description: '获取掘金文章榜',
+    description: '获取掘金文章榜，包含前端开发、后端技术、人工智能、移动开发及技术架构等领域的高质量中文技术文章和教程',
     zodSchema: juejinRequestSchema,
     func: async (args) => {
       const { category_id } = juejinRequestSchema.parse(args);

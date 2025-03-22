@@ -18,7 +18,7 @@ const infoqRequestSchema = z
 
 export default defineToolConfig({
   name: 'get-infoq-news',
-  description: '获取 InfoQ 新闻',
+  description: '获取 InfoQ 技术资讯，包含软件开发、架构设计、云计算、AI等企业级技术内容和前沿开发者动态',
   zodSchema: infoqRequestSchema,
   func: async (args) => {
     const { url, region } = infoqRequestSchema.parse(args);

@@ -173,7 +173,7 @@ const getBilibiliRank = async (type: number) => {
 
 export default defineToolConfig({
   name: 'get-bilibili-rank',
-  description: '获取哔哩哔哩排行榜',
+  description: '获取哔哩哔哩视频排行榜，包含全站、动画、音乐、游戏等多个分区的热门视频，反映当下年轻人的内容消费趋势',
   zodSchema: bilibiliRequestSchema,
   func: async (args: unknown) => {
     const { type } = bilibiliRequestSchema.parse(args);
