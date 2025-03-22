@@ -4,7 +4,7 @@ import { defineToolConfig, http } from '../utils';
 const doubanRankSchema = z.object({
   type: z
     .union([
-      z.literal('subject').describe('综合'),
+      z.literal('subject').describe('图书、电影、电视剧、综艺等'),
       z.literal('movie').describe('电影'),
       z.literal('tv').describe('电视剧'),
     ])
@@ -22,7 +22,7 @@ const URL_MAP: Record<z.infer<typeof doubanRankSchema>['type'], string> = {
 
 export default defineToolConfig({
   name: 'get-douban-rank',
-  description: '获取豆瓣实时热门榜单，提供当前热门的电影、电视剧、综艺等影视作品信息，包含评分和热度数据',
+  description: '获取豆瓣实时热门榜单，提供当前热门的图书、电影、电视剧、综艺等作品信息，包含评分和热度数据',
   zodSchema: doubanRankSchema,
   func: async (args: unknown) => {
     const { type, start, count } = doubanRankSchema.parse(args);
@@ -54,6 +54,7 @@ export default defineToolConfig({
         popularity: item.score,
         rating_count: item.rating.count,
         rating_value: item.rating.count > 0 ? item.rating.value : undefined,
+        hashtags: item.related_search_terms.map((term: any) => `#${term.name}`).join(' '),
       };
     });
   },
