@@ -38,7 +38,8 @@
     "pretest": "npm run build",
     "test": "vitest run",
     "inspector": "mcp-inspector",
-    "version": "npm run build && changeset version",
+    "version": "changeset version",
+    "postversion": "npm run build",
     "prerelease": "npm run build",
     "release": "changeset publish"
   },
