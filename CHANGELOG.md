@@ -1,5 +1,12 @@
 # mcp-trends-hub
 
+## 1.4.0
+
+### Minor Changes
+
+- 63c2941: 新增多个工具
+- 63c2941: 新增 TRENDS_HUB_HIDDEN_FIELDS 环境变量，支持过滤字段
+
 ## 1.3.1
 
 ### Patch Changes
