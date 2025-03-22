@@ -32,8 +32,25 @@
 ### 支持的环境变量
 
 - `TRENDS_HUB_HIDDEN_FIELDS` - 隐藏的字段列表，逗号分隔
+
   - 作用于所有工具：`{field-name}`，例如 `cover`
   - 作用于特定工具：`{tool-name}:{field-name}`，例如 `get-toutiao-trending:cover`
+
+  例如：
+
+  ```json
+  {
+    "mcpServers": {
+      "trends-hub": {
+        "command": "npx",
+        "args": ["-y", "mcp-trends-hub"],
+        "env": {
+          "TRENDS_HUB_HIDDEN_FIELDS": "cover,get-nytimes-news:description"
+        }
+      }
+    }
+  }
+  ```
 
 ## 工具列表
 
