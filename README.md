@@ -1,5 +1,6 @@
 # 🔥 Trends Hub
 
+[![smithery badge](https://smithery.ai/badge/@baranwang/mcp-trends-hub)](https://smithery.ai/server/@baranwang/mcp-trends-hub)
 [![NPM Version](https://img.shields.io/npm/v/mcp-trends-hub)](https://www.npmjs.com/package/mcp-trends-hub)
 ![NPM License](https://img.shields.io/npm/l/mcp-trends-hub)
 
@@ -54,7 +55,19 @@ npx -y mcp-trends-hub@1.6.0
 
 <!-- usage-bash-end -->
 
-## 📄 环境变量
+### 安装
+
+#### 使用 Smithery 安装
+
+通过 [Smithery](https://smithery.ai/server/@baranwang/mcp-trends-hub) 安装 Trends Hub，适用于 Claude Desktop 客户端：
+
+```bash
+npx -y @smithery/cli install @baranwang/mcp-trends-hub --client claude
+```
+
+（以下仅适用于 MCP 模型客户端）
+
+### 配置环境变量
 
 ### `TRENDS_HUB_HIDDEN_FIELDS` - 隐藏的字段列表
 
