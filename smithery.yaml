@@ -1,0 +1,31 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    properties:
+      trendsHubHiddenFields:
+        type: string
+        default: ""
+      trendsHubCustomRssUrl:
+        type: string
+        default: ""
+    description: Optional configuration for customizing Trends Hub.
+      'trendsHubHiddenFields' to hide fields and 'trendsHubCustomRssUrl' to set
+      a custom RSS feed URL.
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.cjs'],
+      env: Object.assign({}, process.env, {
+        TRENDS_HUB_HIDDEN_FIELDS: config.trendsHubHiddenFields || '',
+        TRENDS_HUB_CUSTOM_RSS_URL: config.trendsHubCustomRssUrl || ''
+      })
+    })
+  exampleConfig:
+    trendsHubHiddenFields: cover,get-nytimes-news:description
+    trendsHubCustomRssUrl: https://news.yahoo.com/rss
