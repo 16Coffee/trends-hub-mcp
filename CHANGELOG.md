@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.6.1
+
+### Patch Changes
+
+- 3c53867: 修复知乎热榜 ID 错误的问题
+
 ## 1.6.0
 
 ### Minor Changes
