@@ -22,13 +22,14 @@ export default defineToolConfig({
     }
     return resp.data.data.map((item) => {
       const data = item.target;
+      const id = item.target?.url.split('/').pop();
       return {
         title: data.title,
         description: data.excerpt,
         cover: item.children[0].thumbnail,
         created: dayjs.unix(data.created).toISOString(),
         popularity: item.detail_text,
-        link: `https://www.zhihu.com/question/${data.id}`,
+        link: id ? `https://www.zhihu.com/question/${id}` : undefined,
       };
     });
   },
