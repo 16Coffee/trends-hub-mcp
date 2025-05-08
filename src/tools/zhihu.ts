@@ -14,8 +14,15 @@ export default defineToolConfig({
     const resp = await http.get<{ data: any[] }>('https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total', {
       params: {
         limit,
-        desktop: 'true',
       },
+      headers: {
+        'User-Agent': 'osee2unifiedRelease/22916 osee2unifiedReleaseVersion/10.49.0 Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+        'x-app-versioncode': '22916',
+        'x-app-bundleid': 'com.zhihu.ios',
+        'x-app-build': 'release',
+        'x-package-ytpe': 'appstore', // key 是 知乎的 typo
+        'x-app-za': 'OS=iOS&Release=18.5&Model=iPhone17,2&VersionName=10.49.0&VersionCode=22916&Width=1290&Height=2796&DeviceType=Phone&Brand=Apple&OperatorType=6553565535'
+      }
     });
     if (!Array.isArray(resp.data.data)) {
       throw new Error('获取知乎热榜失败');
