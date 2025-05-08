@@ -1,5 +1,11 @@
 # mcp-trends-hub
 
+## 1.6.2
+
+### Patch Changes
+
+- e81d125: 修复知乎热榜请求失败的问题
+
 ## 1.6.1
 
 ### Patch Changes
