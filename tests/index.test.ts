@@ -25,13 +25,23 @@ describe('MCP 工具测试', async () => {
     expect(toolsResponse).toBeDefined();
     expect(toolsResponse).toHaveProperty('tools');
     expect(toolsResponse.tools).toBeInstanceOf(Array);
-    expect(toolsResponse.tools).toHaveLength(1);
-    expect(toolsResponse.tools[0].name).toBe('get-nytimes-news');
+    expect(toolsResponse.tools).toHaveLength(6);
+    const toolNames = toolsResponse.tools.map((t) => t.name);
+    expect(toolNames).toEqual(
+      expect.arrayContaining([
+        'get-nytimes-news',
+        'get-wallstreetcn-news',
+        'get-bbc-news',
+        'get-washington-post-news',
+        'get-xinhuanet-news',
+        'get-people-news',
+      ]),
+    );
   });
 
-  test('应能调用纽约时报工具', async () => {
+  test('应能调用 BBC 新闻工具', async () => {
     const result = await client.callTool({
-      name: 'get-nytimes-news',
+      name: 'get-bbc-news',
     });
     expect(result).toBeDefined();
     expect(result).toHaveProperty('content');
