@@ -25,7 +25,7 @@ describe('MCP 工具测试', async () => {
     expect(toolsResponse).toBeDefined();
     expect(toolsResponse).toHaveProperty('tools');
     expect(toolsResponse.tools).toBeInstanceOf(Array);
-    expect(toolsResponse.tools).toHaveLength(6);
+    expect(toolsResponse.tools).toHaveLength(8);
     const toolNames = toolsResponse.tools.map((t) => t.name);
     expect(toolNames).toEqual(
       expect.arrayContaining([
@@ -35,6 +35,8 @@ describe('MCP 工具测试', async () => {
         'get-washington-post-news',
         'get-xinhuanet-news',
         'get-people-news',
+        'get-seekingalpha-news',
+        'get-xueqiu-hot-posts',
       ]),
     );
   });
@@ -42,6 +44,16 @@ describe('MCP 工具测试', async () => {
   test('应能调用 BBC 新闻工具', async () => {
     const result = await client.callTool({
       name: 'get-bbc-news',
+    });
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty('content');
+    expect(result.content).toBeInstanceOf(Array);
+    expect(result.content).not.toHaveLength(0);
+  });
+
+  test('应能调用 Seeking Alpha 新闻工具', async () => {
+    const result = await client.callTool({
+      name: 'get-seekingalpha-news',
     });
     expect(result).toBeDefined();
     expect(result).toHaveProperty('content');
