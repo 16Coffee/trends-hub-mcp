@@ -4,7 +4,7 @@
 [![NPM Version](https://img.shields.io/npm/v/mcp-trends-hub)](https://www.npmjs.com/package/mcp-trends-hub)
 ![NPM License](https://img.shields.io/npm/l/mcp-trends-hub)
 
-基于 Model Context Protocol (MCP) 协议的纽约时报新闻服务
+基于 Model Context Protocol (MCP) 协议的多源新闻服务
 
 ## 示例效果
 
@@ -15,7 +15,7 @@
 
 ## ✨ 特性
 
-- 📊 **精选新闻** - 提供纽约时报的热点资讯
+- 📊 **精选新闻** - 提供纽约时报、华尔街见闻、BBC、华盛顿邮报、新华网、人民日报等热点资讯
 - 🔄 **实时更新** - 保持与源站同步的最新热点数据
 - 🧩 **MCP 协议支持** - 完全兼容 Model Context Protocol，轻松集成到 AI 应用
 - 🎨 **灵活定制** - 通过环境变量轻松调整返回字段
@@ -97,7 +97,12 @@ npx -y @smithery/cli install @baranwang/mcp-trends-hub --client claude
 <!-- tools-start -->
 | 工具名称 | 描述 |
 | --- | --- |
+| get-bbc-news | 获取 BBC 新闻最新国际要闻 |
 | get-nytimes-news | 获取纽约时报新闻，包含国际政治、经济金融、社会文化、科学技术及艺术评论的高质量英文或中文国际新闻资讯 |
+| get-people-news | 获取人民日报政治新闻 |
+| get-wallstreetcn-news | 获取华尔街见闻最新资讯 |
+| get-washington-post-news | 获取华盛顿邮报的国际新闻 |
+| get-xinhuanet-news | 获取新华网英文频道国际新闻 |
 
 
 <!-- tools-end -->
