@@ -100,9 +100,11 @@ npx -y @smithery/cli install @baranwang/mcp-trends-hub --client claude
 | get-bbc-news | 获取 BBC 新闻最新国际要闻 |
 | get-nytimes-news | 获取纽约时报新闻，包含国际政治、经济金融、社会文化、科学技术及艺术评论的高质量英文或中文国际新闻资讯 |
 | get-people-news | 获取人民日报政治新闻 |
+| get-seekingalpha-news | 获取 Seeking Alpha 热点新闻 |
 | get-wallstreetcn-news | 获取华尔街见闻最新资讯 |
 | get-washington-post-news | 获取华盛顿邮报的国际新闻 |
 | get-xinhuanet-news | 获取新华网英文频道国际新闻 |
+| get-xueqiu-hot-posts | 获取雪球热门帖子 |
 
 
 <!-- tools-end -->
