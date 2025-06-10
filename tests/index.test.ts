@@ -25,18 +25,17 @@ describe('MCP 工具测试', async () => {
     expect(toolsResponse).toBeDefined();
     expect(toolsResponse).toHaveProperty('tools');
     expect(toolsResponse.tools).toBeInstanceOf(Array);
-    expect(toolsResponse.tools).not.toHaveLength(0);
+    expect(toolsResponse.tools).toHaveLength(1);
+    expect(toolsResponse.tools[0].name).toBe('get-nytimes-news');
   });
 
-  describe.each(toolsResponse.tools.map((tool) => [tool.name]))('%s', async (toolName) => {
-    test('应能调用工具', async () => {
-      const result = await client.callTool({
-        name: toolName,
-      });
-      expect(result).toBeDefined();
-      expect(result).toHaveProperty('content');
-      expect(result.content).toBeInstanceOf(Array);
-      expect(result.content).not.toHaveLength(0);
+  test('应能调用纽约时报工具', async () => {
+    const result = await client.callTool({
+      name: 'get-nytimes-news',
     });
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty('content');
+    expect(result.content).toBeInstanceOf(Array);
+    expect(result.content).not.toHaveLength(0);
   });
 });
