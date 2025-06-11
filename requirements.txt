@@ -1,0 +1,10 @@
+aiohttp
+feedparser
+tenacity
+fastapi
+uvicorn
+openai>=1.0.0
+pydantic
+pytest
+pytest-asyncio
+httpx
