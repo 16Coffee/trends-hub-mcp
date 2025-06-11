@@ -1,9 +1,18 @@
-aiohttp
-feedparser
-tenacity
-fastapi
-uvicorn
-pydantic
-pytest
-pytest-asyncio
-httpx
+# requirements.txt
+# MCP 核心依赖
+mcp>=1.2.0
+
+# RSS 解析
+feedparser>=6.0.0
+
+# 配置文件解析
+PyYAML>=6.0.0
+
+# 环境变量管理
+python-dotenv>=1.0.0
+
+# HTTP 服务器 (用于 SSE 和 Streamable HTTP 传输)
+uvicorn>=0.24.0
+
+# 可选：用于测试 HTTP 功能
+# aiohttp>=3.8.0

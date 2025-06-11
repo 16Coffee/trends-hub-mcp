@@ -1,0 +1,61 @@
+# RSS 新闻源配置
+# 格式: 分类 -> 新闻源列表
+
+categories:
+  tech:
+    - name: "wired"
+      url: "https://www.wired.com/feed/rss"
+      description: "Wired 科技新闻"
+    - name: "theverge"
+      url: "https://www.theverge.com/rss/index.xml"
+      description: "The Verge 科技资讯"
+    - name: "tech"
+      url: "https://www.cnet.com/rss/news/"
+      description: "CNET 科技新闻"
+
+  general:
+    - name: "nytimes"
+      url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+      description: "纽约时报"
+    - name: "bbc"
+      url: "http://feeds.bbci.co.uk/news/rss.xml"
+      description: "BBC 新闻"
+    - name: "guardian"
+      url: "https://www.theguardian.com/world/rss"
+      description: "卫报"
+
+  business:
+    - name: "cnbc"
+      url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+      description: "CNBC 财经"
+    - name: "wsj"
+      url: "https://feeds.a.dj.com/rss/RSSWorldNews.xml"
+      description: "华尔街日报"
+    - name: "business"
+      url: "https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml"
+      description: "华尔街日报商业版"
+
+  science:
+    - name: "nasa"
+      url: "https://www.nasa.gov/news-release/feed/"
+      description: "NASA 新闻"
+    - name: "science"
+      url: "https://www.sciencemag.org/rss/news_current.xml"
+      description: "科学杂志"
+
+  travel:
+    - name: "travel"
+      url: "https://www.theguardian.com/uk/travel/rss"
+      description: "卫报旅游"
+
+  politics:
+    - name: "politics"
+      url: "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml"
+      description: "纽约时报政治"
+
+# 默认配置
+defaults:
+  cache_duration: 300  # 缓存时间（秒）
+  max_articles: 20     # 每个源最大文章数
+  default_limit: 5     # 默认返回文章数
+  max_feeds_per_request: 3  # 每次请求最大源数量

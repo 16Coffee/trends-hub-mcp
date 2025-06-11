@@ -1,0 +1,35 @@
+# 服务器配置
+
+server:
+  name: "news"
+  version: "1.0.0"
+  description: "News MCP Server - RSS新闻聚合服务器"
+
+# 传输协议配置
+transport:
+  default: "stdio"
+  http:
+    host: "127.0.0.1"
+    port: 8000
+  sse:
+    host: "127.0.0.1"
+    port: 8000
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "news_mcp.log"
+
+# 缓存配置
+cache:
+  enabled: true
+  duration: 300  # 5分钟
+  max_size: 100  # 最大缓存条目数
+
+# 限制配置
+limits:
+  max_articles_per_feed: 20
+  default_article_limit: 5
+  max_search_results: 50
+  request_timeout: 30
