@@ -1,0 +1,9 @@
+aiohttp
+feedparser
+tenacity
+fastapi
+uvicorn
+pydantic
+pytest
+pytest-asyncio
+httpx
