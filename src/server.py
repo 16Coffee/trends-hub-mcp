@@ -9,8 +9,7 @@ from mcp.server.fastmcp import FastMCP
 from .config.settings import AppConfig
 from .feeds.manager import FeedManager
 from .feeds.cache import init_cache
-from .tools.system_tools import register_system_tools
-from .tools.news_tools import register_news_tools
+from .tools.manager import ToolManager
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +35,10 @@ def create_server(config: AppConfig) -> FastMCP:
     
     # 创建RSS源管理器
     feed_manager = FeedManager(config.feeds)
-    
-    # 注册工具
-    register_system_tools(mcp, config, feed_manager)
-    register_news_tools(mcp, config, feed_manager)
+
+    # 创建工具管理器并注册工具
+    tool_manager = ToolManager(config, feed_manager)
+    tool_manager.register_tools(mcp)
     
     # 配置HTTP路由（如果需要）
     _setup_http_routes(mcp, config)

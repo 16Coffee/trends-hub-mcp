@@ -5,9 +5,12 @@
 
 import os
 import yaml
+import logging
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -54,6 +57,13 @@ class LimitsConfig:
 
 
 @dataclass
+class ToolsConfig:
+    """工具配置"""
+    enabled: List[str]
+    groups: Dict[str, List[str]]
+
+
+@dataclass
 class FeedSource:
     """RSS源配置"""
     name: str
@@ -79,6 +89,7 @@ class AppConfig:
     logging: LoggingConfig
     cache: CacheConfig
     limits: LimitsConfig
+    tools: ToolsConfig
     feeds: FeedsConfig
 
 
@@ -93,12 +104,16 @@ class ConfigLoader:
         server_config = self._load_server_config()
         feeds_config = self._load_feeds_config()
         
+        # 处理环境变量覆盖
+        tools_config = self._override_tools_config(server_config.tools)
+
         return AppConfig(
             server=server_config.server,
             transport=server_config.transport,
             logging=server_config.logging,
             cache=server_config.cache,
             limits=server_config.limits,
+            tools=tools_config,
             feeds=feeds_config
         )
     
@@ -123,7 +138,8 @@ class ConfigLoader:
             ),
             'logging': LoggingConfig(**data['logging']),
             'cache': CacheConfig(**data['cache']),
-            'limits': LimitsConfig(**data['limits'])
+            'limits': LimitsConfig(**data['limits']),
+            'tools': ToolsConfig(**data['tools'])
         })()
     
     def _load_feeds_config(self) -> FeedsConfig:
@@ -173,6 +189,22 @@ class ConfigLoader:
                 ))
         
         return feeds if feeds else None
+
+    def _override_tools_config(self, tools_config: ToolsConfig) -> ToolsConfig:
+        """使用环境变量覆盖工具配置"""
+        enabled_tools_env = os.getenv('ENABLED_TOOLS', '').strip()
+
+        if enabled_tools_env:
+            # 从环境变量解析启用的工具
+            enabled_tools = [tool.strip() for tool in enabled_tools_env.split(',') if tool.strip()]
+            logger.info(f"从环境变量覆盖启用的工具: {enabled_tools}")
+
+            return ToolsConfig(
+                enabled=enabled_tools,
+                groups=tools_config.groups
+            )
+
+        return tools_config
 
 
 # 全局配置加载器实例

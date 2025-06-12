@@ -152,6 +152,29 @@ Desktop.ini
 
 # Project specific
 *.log
+logs/
+news_mcp.log
 config/local_*.yaml
 temp/
 tmp/
+
+# Docker
+.dockerignore
+
+# SSL certificates
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.test
+
+# Test files
+test_mcp.py
+
+# Backup files
+*.bak
+*.backup

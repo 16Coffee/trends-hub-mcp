@@ -125,14 +125,14 @@ trends-hub-mcp/
 
 ## 🔧 MCP 工具
 
-| 工具名称 | 功能描述 | 主要参数 |
-|----------|----------|----------|
-| `health_check` | 检查服务器健康状态 | 无 |
-| `list_available_feeds` | 列出所有可用的新闻源和分类 | 无 |
-| `get_latest_news` | 获取最新新闻文章 | `category`, `limit` |
-| `search_news` | 搜索匹配查询的新闻文章 | `query`, `limit` |
-| `get_feed_content` | 获取特定新闻源的文章 | `feed_name`, `limit` |
-| `get_article_details` | 通过 URL 获取文章详细信息 | `url` |
+| 工具名称 | 功能描述 | 主要参数 | 分组 |
+|----------|----------|----------|------|
+| `health_check` | 检查服务器健康状态 | 无 | system |
+| `list_available_feeds` | 列出所有可用的新闻源和分类 | 无 | system |
+| `get_latest_news` | 获取最新新闻文章 | `category`, `limit` | news |
+| `search_news` | 搜索匹配查询的新闻文章 | `query`, `limit` | news |
+| `get_feed_content` | 获取特定新闻源的文章 | `feed_name`, `limit` | news |
+| `get_article_details` | 通过 URL 获取文章详细信息 | `url` | news |
 
 **参数说明**：
 - `category`: 分类过滤 (tech, general, business, science, travel, politics)
@@ -140,6 +140,52 @@ trends-hub-mcp/
 - `query`: 搜索关键词
 - `feed_name`: 新闻源名称
 - `url`: 文章 URL
+
+### 🎯 工具选择部署
+
+你可以在部署时选择只启用特定的工具：
+
+#### 方式1: 使用部署脚本
+```bash
+# 仅启用基础功能
+./deploy.sh --tools health_check,get_latest_news,search_news start
+
+# 仅启用系统工具
+./deploy.sh --tools health_check,list_available_feeds start
+
+# 启用所有新闻工具
+./deploy.sh --tools get_latest_news,search_news,get_feed_content,get_article_details start
+```
+
+#### 方式2: 使用环境变量
+```bash
+# 设置环境变量
+export ENABLED_TOOLS="health_check,get_latest_news,search_news"
+
+# 启动服务
+./deploy.sh start
+```
+
+#### 方式3: 使用配置文件
+```bash
+# 复制配置模板
+cp .env.example .env
+
+# 编辑 .env 文件，设置 ENABLED_TOOLS
+vim .env
+
+# 启动服务
+docker-compose up -d
+```
+
+#### 预设工具组合
+
+| 场景 | 推荐工具 | 说明 |
+|------|----------|------|
+| **基础监控** | `health_check` | 仅健康检查 |
+| **系统管理** | `health_check,list_available_feeds` | 系统状态和源管理 |
+| **新闻阅读** | `health_check,get_latest_news,search_news` | 基础新闻功能 |
+| **完整功能** | 留空或所有工具 | 启用所有功能 |
 
 ## 🌐 HTTP API 使用
 
@@ -183,6 +229,18 @@ export NEWS_MCP_CUSTOM_FEEDS="techcrunch:https://techcrunch.com/feed/;hacker_new
 python -m src.main --transport streamable-http
 ```
 格式：`name1:url1;name2:url2`
+
+#### 方式3: 使用配置文件
+```bash
+# 复制配置模板
+cp .env.example .env
+
+# 编辑配置文件
+vim .env
+
+# 使用配置文件启动
+docker-compose --env-file .env up -d
+```
 
 ### 开发和调试
 ```bash

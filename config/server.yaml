@@ -33,3 +33,25 @@ limits:
   default_article_limit: 5
   max_search_results: 50
   request_timeout: 30
+
+# 工具配置
+tools:
+  # 启用的工具列表 (留空表示启用所有工具)
+  enabled:
+    - health_check
+    - list_available_feeds
+    - get_latest_news
+    - search_news
+    - get_feed_content
+    - get_article_details
+
+  # 工具分组
+  groups:
+    system:
+      - health_check
+      - list_available_feeds
+    news:
+      - get_latest_news
+      - search_news
+      - get_feed_content
+      - get_article_details
