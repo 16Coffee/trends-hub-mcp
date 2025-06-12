@@ -94,10 +94,23 @@ log_info "重新构建并启动服务 (不使用缓存)..."
 unset HTTP_PROXY HTTPS_PROXY
 docker-compose build --no-cache news-mcp
 
-# 重新设置代理环境变量供容器运行时使用
-export HTTP_PROXY="http://$PROXY_HOST"
-export HTTPS_PROXY="http://$PROXY_HOST"
-docker-compose up -d news-mcp
+# 停止可能存在的容器
+log_info "停止现有容器..."
+docker stop news-mcp-server 2>/dev/null || true
+docker rm news-mcp-server 2>/dev/null || true
+
+# 直接用docker命令启动容器
+log_info "启动新容器..."
+docker run -d \
+  --name news-mcp-server \
+  -p $PORT:8000 \
+  -e HTTP_PROXY="http://$PROXY_HOST" \
+  -e HTTPS_PROXY="http://$PROXY_HOST" \
+  -e NO_PROXY="localhost,127.0.0.1,0.0.0.0,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" \
+  -e ENABLED_TOOLS="$ENABLED_TOOLS" \
+  --add-host host.docker.internal:host-gateway \
+  --restart unless-stopped \
+  trends-hub-mcp_news-mcp:latest
 
 log_success "服务启动成功"
 log_info "服务地址: http://localhost:$PORT"

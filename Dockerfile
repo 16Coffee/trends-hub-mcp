@@ -51,5 +51,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/ || exit 1
 
-# 默认启动命令
-CMD ["python", "-m", "src.main", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8000"]
+# 默认启动命令 - 使用SSE传输协议
+CMD ["python", "-m", "src.main", "--transport", "sse", "--host", "0.0.0.0", "--port", "8000"]
