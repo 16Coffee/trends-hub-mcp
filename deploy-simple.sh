@@ -95,7 +95,13 @@ find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 find . -name "*.pyc" -delete 2>/dev/null || true
 
 log_info "重新构建并启动服务 (不使用缓存)..."
+# 构建时清除代理环境变量，避免影响镜像下载
+unset HTTP_PROXY HTTPS_PROXY
 docker-compose build --no-cache news-mcp
+
+# 重新设置代理环境变量供容器运行时使用
+export HTTP_PROXY="http://$PROXY_HOST"
+export HTTPS_PROXY="http://$PROXY_HOST"
 docker-compose up -d news-mcp
 
 log_success "服务启动成功"
