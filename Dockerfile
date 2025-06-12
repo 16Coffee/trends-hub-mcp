@@ -1,5 +1,5 @@
-# 使用网易云镜像的 Python 3.11 slim 镜像
-FROM hub-mirror.c.163.com/library/python:3.11-slim
+# 使用阿里云镜像的 Python 3.11 slim 镜像
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
 
 # 设置工作目录
 WORKDIR /app

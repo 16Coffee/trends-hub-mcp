@@ -55,7 +55,7 @@ sudo tee /etc/docker/daemon.json > /dev/null <<EOF
   "registry-mirrors": [
     "https://registry.cn-hangzhou.aliyuncs.com",
     "https://docker.mirrors.ustc.edu.cn",
-    "https://hub-mirror.c.163.com"
+    "https://dockerhub.azk8s.cn"
   ],
   "insecure-registries": [],
   "debug": false,
