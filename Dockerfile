@@ -1,5 +1,5 @@
-# 使用官方 Python 3.11 slim 镜像
-FROM python:3.11-slim
+# 使用可用的Python镜像源
+FROM docker.hlmirror.com/python:3.11-slim
 
 # 设置工作目录
 WORKDIR /app
