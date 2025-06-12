@@ -74,10 +74,10 @@ def parse_args():
 def run_server(transport: str, host: str, port: int, config):
     """运行服务器"""
     logger.info(f"启动 News MCP Server，传输协议: {transport}")
-    
+
     # 创建服务器
     mcp = create_server(config)
-    
+
     if transport == 'stdio':
         logger.info("使用 stdio 传输协议")
         mcp.run(transport='stdio')
@@ -92,6 +92,12 @@ def run_server(transport: str, host: str, port: int, config):
         mcp.settings.host = host
         mcp.settings.port = port
         mcp.run(transport='streamable-http')
+    elif transport == 'multi':
+        logger.info(f"多协议服务器将在 http://{host}:{port} 启动")
+        logger.info(f"SSE 端点: http://{host}:{port}/sse")
+        logger.info(f"Streamable HTTP 端点: http://{host}:{port}/mcp")
+        logger.info(f"状态页面: http://{host}:{port}/")
+        run_multi_protocol_server(mcp, host, port)
     else:
         raise ValueError(f"不支持的传输协议: {transport}")
 

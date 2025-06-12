@@ -92,7 +92,7 @@ find . -name "*.pyc" -delete 2>/dev/null || true
 log_info "重新构建并启动服务 (不使用缓存)..."
 # 构建时清除代理环境变量，避免影响镜像下载
 unset HTTP_PROXY HTTPS_PROXY
-docker-compose build --no-cache news-mcp
+docker build --no-cache -t trends-hub-mcp:latest .
 
 # 停止可能存在的容器
 log_info "停止现有容器..."
@@ -110,7 +110,7 @@ docker run -d \
   -e ENABLED_TOOLS="$ENABLED_TOOLS" \
   --add-host host.docker.internal:host-gateway \
   --restart unless-stopped \
-  trends-hub-mcp_news-mcp:latest
+  trends-hub-mcp:latest
 
 log_success "服务启动成功"
 log_info "服务地址: http://localhost:$PORT"
