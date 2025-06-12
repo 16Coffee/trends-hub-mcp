@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "trends-hub-mcp": {
+      "command": "/Users/yajun/miniconda3/bin/python",
+      "args": [
+        "/Users/yajun/Downloads/ai_project/trends-hub-mcp/mcp_server.py"
+      ],
+      "cwd": "/Users/yajun/Downloads/ai_project/trends-hub-mcp",
+      "timeout": 600,
+      "autoApprove": [
+        "hot_news"
+      ]
+    }
+  }
+}

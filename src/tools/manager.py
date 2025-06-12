@@ -348,13 +348,13 @@ class ToolManager:
                     
                     # 获取文章详情
                     article = await self.feed_manager.get_article_details(url.strip())
-                    
+
                     if article:
                         return {
                             "article": article,
                             "url": url.strip(),
                             "found": True,
-                            "timestamp": self.feed_manager.cache.get_current_time()
+                            "timestamp": time.time()
                         }
                     else:
                         return {

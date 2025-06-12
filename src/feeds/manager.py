@@ -6,8 +6,8 @@ RSS源管理模块
 import asyncio
 import logging
 import feedparser
+import time
 from typing import Dict, List, Any, Optional
-from datetime import datetime
 
 from ..config.settings import FeedSource, FeedsConfig
 from .cache import get_cache
@@ -31,47 +31,48 @@ class FeedManager:
         
     async def fetch_feed(self, feed_source: FeedSource, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """
-        获取单个RSS源的内容
-        
+        获取单个RSS源的内容，与旧版本逻辑保持一致
+
         Args:
             feed_source: RSS源配置
             limit: 文章数量限制
-            
+
         Returns:
             文章列表
         """
-        cache_key = f"feed:{feed_source.name}"
-        
-        # 尝试从缓存获取
+        cache_key = f"feed:{feed_source.url}"
+
+        # 检查缓存（简化版本，类似旧版本）
         cached_data = await self.cache.get(cache_key)
         if cached_data is not None:
             logger.debug(f"从缓存获取RSS源: {feed_source.name}")
             return cached_data[:limit] if limit else cached_data
-        
+
         try:
             logger.info(f"获取RSS源: {feed_source.name} ({feed_source.url})")
-            
+
             # 在线程池中执行RSS解析（避免阻塞）
             loop = asyncio.get_event_loop()
             feed = await loop.run_in_executor(None, feedparser.parse, feed_source.url)
-            
+
             if feed.bozo:
                 logger.warning(f"RSS源解析警告: {feed_source.name} - {feed.bozo_exception}")
-            
+
             articles = []
-            max_articles = limit or self.config.max_articles
-            
+            max_articles = limit or 20  # 类似旧版本的 MAX_ARTICLE_LIMIT
+
             for entry in feed.entries[:max_articles]:
                 article = self._parse_entry(entry, feed_source.name)
                 if article:
+                    article["feed_url"] = feed_source.url
                     articles.append(article)
-            
+
             # 缓存结果
             await self.cache.set(cache_key, articles, self.config.cache_duration)
-            
+
             logger.info(f"成功获取 {len(articles)} 篇文章从 {feed_source.name}")
-            return articles
-            
+            return articles[:limit] if limit else articles
+
         except Exception as e:
             logger.error(f"获取RSS源失败: {feed_source.name} - {e}")
             return []
@@ -167,42 +168,27 @@ class FeedManager:
     
     def _parse_entry(self, entry: Any, feed_name: str) -> Optional[Dict[str, Any]]:
         """
-        解析RSS条目
-        
+        解析RSS条目，与旧版本保持一致
+
         Args:
             entry: RSS条目
             feed_name: RSS源名称
-            
+
         Returns:
             解析后的文章信息
         """
         try:
-            # 解析发布时间
-            published_timestamp = 0
-            if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                import time
-                published_timestamp = time.mktime(entry.published_parsed)
-            
             article = {
-                'title': getattr(entry, 'title', '无标题'),
-                'link': getattr(entry, 'link', ''),
-                'summary': getattr(entry, 'summary', ''),
-                'published': getattr(entry, 'published', ''),
-                'published_timestamp': published_timestamp,
-                'feed_name': feed_name,
-                'author': getattr(entry, 'author', ''),
-                'tags': [tag.term for tag in getattr(entry, 'tags', [])],
-                'content': ''
+                "title": getattr(entry, 'title', '无标题'),
+                "link": getattr(entry, 'link', ''),
+                "summary": getattr(entry, 'summary', 'No summary available'),
+                "published": getattr(entry, 'published', 'No date available'),
+                "source": feed_name,
+                "feed_url": ""  # 这个会在调用时设置
             }
-            
-            # 提取内容
-            if hasattr(entry, 'content') and entry.content:
-                article['content'] = entry.content[0].value if entry.content else ''
-            elif hasattr(entry, 'description'):
-                article['content'] = entry.description
-            
+
             return article
-            
+
         except Exception as e:
             logger.error(f"解析RSS条目失败: {e}")
             return None
@@ -218,3 +204,29 @@ class FeedManager:
     def get_all_feeds(self) -> Dict[str, List[FeedSource]]:
         """获取所有RSS源"""
         return self.config.categories
+
+    async def get_article_details(self, url: str) -> Optional[Dict[str, Any]]:
+        """
+        通过URL获取文章详细信息
+
+        Args:
+            url: 文章URL
+
+        Returns:
+            文章详细信息，如果未找到则返回None
+        """
+        try:
+            # 从所有缓存的文章中查找
+            all_articles = await self.fetch_all_feeds()
+
+            # 查找匹配的文章
+            for article in all_articles:
+                if article.get('link') == url:
+                    return article
+
+            logger.warning(f"未找到URL对应的文章: {url}")
+            return None
+
+        except Exception as e:
+            logger.error(f"获取文章详情失败: {e}")
+            return None
