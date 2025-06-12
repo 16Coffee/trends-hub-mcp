@@ -4,7 +4,8 @@
 """
 
 import logging
-from typing import Set, List, Dict, Any
+import time
+from typing import Set, List, Dict, Any, Optional
 from mcp.server.fastmcp import FastMCP
 
 from ..config.settings import AppConfig, ToolsConfig
@@ -180,7 +181,7 @@ class ToolManager:
         
         if 'get_latest_news' in enabled_tools:
             @mcp.tool()
-            async def get_latest_news(category: str = None, limit: int = None) -> Dict[str, Any]:
+            async def get_latest_news(category: Optional[str] = None, limit: Optional[int] = None) -> Dict[str, Any]:
                 """从 RSS 源获取最新新闻文章。"""
                 try:
                     # 使用配置的默认限制
@@ -191,17 +192,22 @@ class ToolManager:
                     limit = min(limit, self.config.limits.max_articles_per_feed)
                     
                     # 获取文章
-                    articles = await self.feed_manager.get_latest_articles(
-                        category=category,
-                        limit=limit
-                    )
+                    if category:
+                        articles = await self.feed_manager.fetch_feeds_by_category(
+                            category=category,
+                            limit=limit
+                        )
+                    else:
+                        articles = await self.feed_manager.fetch_all_feeds(
+                            limit=limit
+                        )
                     
                     return {
                         "articles": articles,
                         "total_count": len(articles),
                         "category": category or "all",
                         "limit": limit,
-                        "timestamp": self.feed_manager.cache.get_current_time()
+                        "timestamp": time.time()
                     }
                     
                 except Exception as e:
@@ -216,7 +222,7 @@ class ToolManager:
         
         if 'search_news' in enabled_tools:
             @mcp.tool()
-            async def search_news(query: str, limit: int = None) -> Dict[str, Any]:
+            async def search_news(query: str, limit: Optional[int] = None) -> Dict[str, Any]:
                 """在新闻文章中搜索匹配查询的内容。"""
                 try:
                     if not query or not query.strip():
@@ -235,18 +241,23 @@ class ToolManager:
                     # 限制最大搜索结果数量
                     limit = min(limit, self.config.limits.max_search_results)
                     
-                    # 搜索文章
-                    articles = await self.feed_manager.search_articles(
-                        query=query.strip(),
-                        limit=limit
+                    # 先获取所有文章，然后搜索
+                    all_articles = await self.feed_manager.fetch_all_feeds()
+                    articles = self.feed_manager.search_articles(
+                        articles=all_articles,
+                        query=query.strip()
                     )
+
+                    # 限制结果数量
+                    if limit:
+                        articles = articles[:limit]
                     
                     return {
                         "articles": articles,
                         "total_count": len(articles),
                         "query": query.strip(),
                         "limit": limit,
-                        "timestamp": self.feed_manager.cache.get_current_time()
+                        "timestamp": time.time()
                     }
                     
                 except Exception as e:
@@ -261,7 +272,7 @@ class ToolManager:
         
         if 'get_feed_content' in enabled_tools:
             @mcp.tool()
-            async def get_feed_content(feed_name: str, limit: int = None) -> Dict[str, Any]:
+            async def get_feed_content(feed_name: str, limit: Optional[int] = None) -> Dict[str, Any]:
                 """获取特定新闻源的文章内容。"""
                 try:
                     if not feed_name or not feed_name.strip():
@@ -280,9 +291,29 @@ class ToolManager:
                     # 限制最大文章数量
                     limit = min(limit, self.config.limits.max_articles_per_feed)
                     
+                    # 查找指定的RSS源
+                    feed_source = None
+                    for category_feeds in self.feed_manager.get_all_feeds().values():
+                        for feed in category_feeds:
+                            if feed.name == feed_name.strip():
+                                feed_source = feed
+                                break
+                        if feed_source:
+                            break
+
+                    if not feed_source:
+                        return {
+                            "success": False,
+                            "error": f"未找到名为 '{feed_name.strip()}' 的RSS源",
+                            "available_feeds": [
+                                feed.name for feeds in self.feed_manager.get_all_feeds().values()
+                                for feed in feeds
+                            ]
+                        }
+
                     # 获取特定源的文章
-                    articles = await self.feed_manager.get_feed_articles(
-                        feed_name=feed_name.strip(),
+                    articles = await self.feed_manager.fetch_feed(
+                        feed_source=feed_source,
                         limit=limit
                     )
                     
@@ -291,7 +322,7 @@ class ToolManager:
                         "total_count": len(articles),
                         "feed_name": feed_name.strip(),
                         "limit": limit,
-                        "timestamp": self.feed_manager.cache.get_current_time()
+                        "timestamp": time.time()
                     }
                     
                 except Exception as e:
