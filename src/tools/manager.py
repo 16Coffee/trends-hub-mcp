@@ -8,10 +8,8 @@ import time
 from typing import Set, List, Dict, Any, Optional
 from mcp.server.fastmcp import FastMCP
 
-from ..config.settings import AppConfig, ToolsConfig
+from ..config.settings import AppConfig
 from ..feeds.manager import FeedManager
-from .system_tools import register_system_tools
-from .news_tools import register_news_tools
 
 logger = logging.getLogger(__name__)
 
