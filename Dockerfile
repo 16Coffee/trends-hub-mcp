@@ -17,8 +17,9 @@ ENV HTTP_PROXY=${HTTP_PROXY}
 ENV HTTPS_PROXY=${HTTPS_PROXY}
 ENV NO_PROXY=${NO_PROXY}
 
-# 安装系统依赖
-RUN apt-get update && apt-get install -y \
+# 更换为国内 apt 源并安装系统依赖
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources && \
+    apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

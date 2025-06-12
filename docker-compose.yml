@@ -4,10 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # 构建时代理设置
-        - HTTP_PROXY=${HTTP_PROXY:-}
-        - HTTPS_PROXY=${HTTPS_PROXY:-}
+        # 构建时代理设置 (仅在需要时使用)
+        - HTTP_PROXY=${BUILD_HTTP_PROXY:-}
+        - HTTPS_PROXY=${BUILD_HTTPS_PROXY:-}
         - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1}
+      network: host
     container_name: news-mcp-server
     ports:
       - "${PORT:-8000}:8000"
