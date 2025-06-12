@@ -64,6 +64,22 @@ log_info "启用的工具: $ENABLED_TOOLS"
 # 创建目录
 mkdir -p logs
 
+# 预拉取Python基础镜像
+log_info "预拉取Python基础镜像..."
+if ! docker images | grep -q "python.*3.11-slim"; then
+    log_info "尝试从腾讯云镜像仓库拉取Python镜像..."
+    if docker pull ccr.ccs.tencentyun.com/library/python:3.11-slim 2>/dev/null; then
+        docker tag ccr.ccs.tencentyun.com/library/python:3.11-slim python:3.11-slim
+        log_success "成功从腾讯云拉取Python镜像"
+    elif docker pull python:3.11-slim 2>/dev/null; then
+        log_success "成功拉取Python镜像"
+    else
+        log_info "Python镜像拉取失败，尝试使用现有镜像继续..."
+    fi
+else
+    log_success "Python镜像已存在"
+fi
+
 # 清理旧版本并重新构建 (确保使用最新代码)
 log_info "清理旧版本..."
 docker-compose down news-mcp 2>/dev/null || true
