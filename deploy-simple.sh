@@ -47,6 +47,27 @@ log_info "简化版阿里云 ECS 部署"
 log_info "端口: $PORT"
 log_info "工具: $ENABLED_TOOLS"
 
+# 配置Docker镜像加速器
+log_info "配置Docker镜像加速器..."
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+{
+  "registry-mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com"
+  ],
+  "insecure-registries": [],
+  "debug": false,
+  "experimental": false
+}
+EOF
+
+# 重启Docker服务
+log_info "重启Docker服务..."
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
 # 设置环境变量
 export PORT=$PORT
 export ENABLED_TOOLS="$ENABLED_TOOLS"
