@@ -20,7 +20,7 @@ log_success() {
 # 默认参数
 PORT="8001"
 ENABLED_TOOLS="get_latest_news"
-PROXY_HOST="127.0.0.1:7890"
+PROXY_HOST="host.docker.internal:7890"  # Docker内部访问宿主机代理
 
 # 解析参数
 while [[ $# -gt 0 ]]; do
@@ -54,14 +54,27 @@ export HTTP_PROXY="http://$PROXY_HOST"
 export HTTPS_PROXY="http://$PROXY_HOST"
 export NO_PROXY="localhost,127.0.0.1,0.0.0.0,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
+log_info "Docker容器代理配置:"
+log_info "  HTTP_PROXY=$HTTP_PROXY"
+log_info "  HTTPS_PROXY=$HTTPS_PROXY"
+
 log_info "使用代理: $PROXY_HOST"
 log_info "启用的工具: $ENABLED_TOOLS"
 
 # 创建目录
 mkdir -p logs
 
-# 构建并启动 (使用国内镜像源，不需要构建时代理)
-log_info "构建并启动服务..."
+# 清理旧版本并重新构建 (确保使用最新代码)
+log_info "清理旧版本..."
+docker-compose down news-mcp 2>/dev/null || true
+docker rmi trends-hub-mcp:latest 2>/dev/null || true
+
+log_info "清理Python缓存..."
+find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+find . -name "*.pyc" -delete 2>/dev/null || true
+
+log_info "重新构建并启动服务 (不使用缓存)..."
+docker-compose build --no-cache news-mcp
 docker-compose up -d news-mcp
 
 log_success "服务启动成功"

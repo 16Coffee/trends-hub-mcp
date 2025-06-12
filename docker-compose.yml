@@ -8,8 +8,10 @@ services:
         - HTTP_PROXY=${BUILD_HTTP_PROXY:-}
         - HTTPS_PROXY=${BUILD_HTTPS_PROXY:-}
         - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1}
-      network: host
     container_name: news-mcp-server
+    # 添加宿主机网络访问支持
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${PORT:-8000}:8000"
     environment:

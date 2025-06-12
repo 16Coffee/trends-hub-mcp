@@ -35,6 +35,10 @@ RUN pip install --no-cache-dir --upgrade pip -i https://mirrors.aliyun.com/pypi/
 COPY src/ ./src/
 COPY config/ ./config/
 
+# 清理可能的Python缓存文件
+RUN find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true && \
+    find . -name "*.pyc" -delete 2>/dev/null || true
+
 # 创建非 root 用户
 RUN useradd --create-home --shell /bin/bash app && \
     chown -R app:app /app

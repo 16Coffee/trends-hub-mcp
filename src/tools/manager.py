@@ -182,23 +182,31 @@ class ToolManager:
             async def get_latest_news(category: Optional[str] = None, limit: Optional[int] = None) -> Dict[str, Any]:
                 """从 RSS 源获取最新新闻文章。"""
                 try:
+                    logger.info(f"get_latest_news 开始执行，category={category}, limit={limit}")
+
                     # 使用配置的默认限制
                     if limit is None:
                         limit = self.config.limits.default_article_limit
-                    
+
                     # 限制最大文章数量
                     limit = min(limit, self.config.limits.max_articles_per_feed)
-                    
+
+                    logger.info(f"处理后的参数：category={category}, limit={limit}")
+
                     # 获取文章
                     if category:
+                        logger.info(f"按分类获取文章：{category}")
                         articles = await self.feed_manager.fetch_feeds_by_category(
                             category=category,
                             limit=limit
                         )
                     else:
+                        logger.info("获取所有文章")
                         articles = await self.feed_manager.fetch_all_feeds(
                             limit=limit
                         )
+
+                    logger.info(f"成功获取 {len(articles)} 篇文章")
                     
                     return {
                         "articles": articles,
