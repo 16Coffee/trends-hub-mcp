@@ -88,7 +88,11 @@ class ToolManager:
         if 'health_check' in enabled_tools:
             @mcp.tool()
             async def health_check() -> Dict[str, Any]:
-                """检查新闻 MCP 服务器的健康状态和运行情况。"""
+                """
+                检查新闻 MCP 服务器的健康状态和运行情况。
+
+                返回服务器状态信息，包括版本、可用源数量、缓存统计等。
+                """
                 try:
                     # 获取缓存统计
                     cache_stats = self.feed_manager.cache.get_stats()
@@ -133,7 +137,11 @@ class ToolManager:
         if 'list_available_feeds' in enabled_tools:
             @mcp.tool()
             async def list_available_feeds() -> Dict[str, Any]:
-                """列出所有可用的新闻源及其分类。"""
+                """
+                列出所有可用的新闻源及其分类。
+
+                返回所有配置的RSS新闻源信息，按分类组织。
+                """
                 try:
                     all_feeds = self.feed_manager.get_all_feeds()
                     categories = self.feed_manager.get_available_categories()
@@ -180,7 +188,16 @@ class ToolManager:
         if 'get_latest_news' in enabled_tools:
             @mcp.tool()
             async def get_latest_news(category: Optional[str] = None, limit: Optional[int] = None) -> Dict[str, Any]:
-                """从 RSS 源获取最新新闻文章。"""
+                """
+                从 RSS 源获取最新新闻文章。
+
+                参数:
+                    category (str, 可选): 新闻分类过滤，可选值: tech, general, business, science, travel, politics
+                    limit (int, 可选): 返回文章数量限制，默认5条，最大20条
+
+                返回:
+                    包含文章列表、总数、分类和时间戳的字典
+                """
                 try:
                     logger.info(f"get_latest_news 开始执行，category={category}, limit={limit}")
 
@@ -193,16 +210,16 @@ class ToolManager:
 
                     logger.info(f"处理后的参数：category={category}, limit={limit}")
 
-                    # 获取文章
+                    # 获取文章 - 使用平衡获取方法，每个源随机取1-2条
                     if category:
-                        logger.info(f"按分类获取文章：{category}")
-                        articles = await self.feed_manager.fetch_feeds_by_category(
+                        logger.info(f"按分类获取文章：{category}（平衡模式：每个源随机1-2条）")
+                        articles = await self.feed_manager.fetch_feeds_by_category_balanced(
                             category=category,
                             limit=limit
                         )
                     else:
-                        logger.info("获取所有文章")
-                        articles = await self.feed_manager.fetch_all_feeds(
+                        logger.info("获取所有文章（平衡模式：每个源随机1-2条）")
+                        articles = await self.feed_manager.fetch_all_feeds_balanced(
                             limit=limit
                         )
 
@@ -229,7 +246,16 @@ class ToolManager:
         if 'search_news' in enabled_tools:
             @mcp.tool()
             async def search_news(query: str, limit: Optional[int] = None) -> Dict[str, Any]:
-                """在新闻文章中搜索匹配查询的内容。"""
+                """
+                在新闻文章中搜索匹配查询的内容。
+
+                参数:
+                    query (str, 必需): 搜索关键词，不能为空
+                    limit (int, 可选): 返回结果数量限制，默认5条，最大50条
+
+                返回:
+                    包含匹配文章列表、总数、查询词和时间戳的字典
+                """
                 try:
                     if not query or not query.strip():
                         return {
@@ -279,7 +305,16 @@ class ToolManager:
         if 'get_feed_content' in enabled_tools:
             @mcp.tool()
             async def get_feed_content(feed_name: str, limit: Optional[int] = None) -> Dict[str, Any]:
-                """获取特定新闻源的文章内容。"""
+                """
+                获取特定新闻源的文章内容。
+
+                参数:
+                    feed_name (str, 必需): 新闻源名称，不能为空
+                    limit (int, 可选): 返回文章数量限制，默认5条，最大20条
+
+                返回:
+                    包含指定源的文章列表、总数、源名称和时间戳的字典
+                """
                 try:
                     if not feed_name or not feed_name.strip():
                         return {
@@ -344,7 +379,15 @@ class ToolManager:
         if 'get_article_details' in enabled_tools:
             @mcp.tool()
             async def get_article_details(url: str) -> Dict[str, Any]:
-                """通过URL获取文章的详细信息。"""
+                """
+                通过URL获取文章的详细信息。
+
+                参数:
+                    url (str, 必需): 文章的完整URL地址，不能为空
+
+                返回:
+                    包含文章详细信息、URL和查找状态的字典
+                """
                 try:
                     if not url or not url.strip():
                         return {
