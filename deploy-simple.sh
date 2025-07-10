@@ -20,7 +20,7 @@ log_success() {
 # 默认参数
 PORT="8001"
 ENABLED_TOOLS="get_latest_news"
-PROXY_HOST="host.docker.internal:7890"  # Docker内部访问宿主机代理
+PROXY_HOST="100.72.99.108:28888"  # 指定的代理服务器地址
 
 # 解析参数
 while [[ $# -gt 0 ]]; do
