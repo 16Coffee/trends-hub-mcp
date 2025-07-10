@@ -90,9 +90,13 @@ find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 find . -name "*.pyc" -delete 2>/dev/null || true
 
 log_info "重新构建并启动服务 (不使用缓存)..."
-# 构建时清除代理环境变量，避免影响镜像下载
-unset HTTP_PROXY HTTPS_PROXY
-docker build --no-cache -t trends-hub-mcp:latest .
+# 构建时使用代理，确保Docker能够通过代理拉取镜像
+log_info "Docker构建使用代理: $HTTP_PROXY"
+docker build --no-cache \
+  --build-arg HTTP_PROXY="$HTTP_PROXY" \
+  --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
+  --build-arg NO_PROXY="$NO_PROXY" \
+  -t trends-hub-mcp:latest .
 
 # 停止可能存在的容器
 log_info "停止现有容器..."
